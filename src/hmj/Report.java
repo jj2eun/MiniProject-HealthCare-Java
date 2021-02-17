@@ -1,5 +1,5 @@
 package hmj;
-
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -14,8 +14,7 @@ import javax.swing.SwingConstants;
 
 public class Report extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField textField;
+	private JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -24,8 +23,8 @@ public class Report extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Report frame = new Report();
-					frame.setVisible(true);
+					Report rp = new Report();
+					rp.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -37,12 +36,24 @@ public class Report extends JFrame {
 	 * Create the frame.
 	 */
 	public Report() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
-		contentPane = new JPanel();
+		initialize() ;
+	}
+	
+	private void initialize() {
+		frame = new JFrame();
+		frame.setTitle("FoodList");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 800, 600);
+		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		
+		JPanel contentPane = new JPanel();
+		contentPane.setBounds(0,0,794,561);
+		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.setVisible(true);
 		
 		//====================================JButton====================================
 		JButton btnMain = new JButton("∏ﬁ¿Œ");
@@ -65,7 +76,7 @@ public class Report extends JFrame {
 		btnWeightSave.setBounds(675, 99, 97, 29);
 		contentPane.add(btnWeightSave);
 		//====================================textField====================================
-		textField = new JTextField();
+		JTextField textField = new JTextField();
 		textField.setBounds(253, 99, 405, 29);
 		contentPane.add(textField);
 		textField.setColumns(10);

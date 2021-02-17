@@ -1,5 +1,5 @@
 package hmj;
-
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -18,10 +18,7 @@ import java.awt.event.ActionEvent;
 
 public class ExerciseList extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField fieldSearch;
-	private JTextField fieldCount;
-	private JTextField fieldTC;
+	private JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -30,8 +27,8 @@ public class ExerciseList extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ExerciseList frame = new ExerciseList();
-					frame.setVisible(true);
+					ExerciseList el = new ExerciseList();
+					el.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -42,13 +39,26 @@ public class ExerciseList extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public ExerciseList() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
-		contentPane = new JPanel();
+		initialize();
+	}
+	
+	private void  initialize() {
+		frame = new JFrame();
+		frame.setTitle("FoodList");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 800, 600);
+		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		
+		JPanel contentPane = new JPanel();
+		contentPane.setBounds(0,0,794,561);
+		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.setVisible(true);
 		
 	
 		//====================================JList====================================
@@ -82,7 +92,7 @@ public class ExerciseList extends JFrame {
 		contentPane.add(btnRept);
 		
 		JButton btnSearch = new JButton("°Ë»ö");
-		btnSearch.setBounds(714, 10, 58, 40);
+		btnSearch.setBounds(702, 10, 70, 40);
 		contentPane.add(btnSearch);
 		
 		JButton btnPlus = new JButton("+");
@@ -101,17 +111,17 @@ public class ExerciseList extends JFrame {
 		contentPane.add(btnSave);
 		
 		//====================================TextField====================================
-		fieldSearch = new JTextField();
-		fieldSearch.setBounds(412, 10, 290, 40);
+		JTextField fieldSearch = new JTextField();
+		fieldSearch.setBounds(412, 10, 278, 40);
 		fieldSearch.setColumns(10);
 		contentPane.add(fieldSearch);
 		
-		fieldCount = new JTextField();
+		JTextField fieldCount = new JTextField();
 		fieldCount.setBounds(70, 512, 58, 39);
 		fieldCount.setColumns(10);
 		contentPane.add(fieldCount);
 		
-		fieldTC = new JTextField();
+		JTextField fieldTC = new JTextField();
 		fieldTC.setBounds(541, 511, 231, 33);
 		fieldTC.setColumns(10);
 		contentPane.add(fieldTC);

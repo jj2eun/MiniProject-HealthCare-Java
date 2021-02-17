@@ -1,5 +1,5 @@
 package hmj;
-
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -16,12 +16,9 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class FoodList extends JFrame {
-
-	private JPanel contentPane;
-	private JTextField fieldSearch;
-	private JTextField fieldCount;
-	private JTextField fieldTC;
+public class FoodList {
+	private JFrame frame;
+	
 
 	/**
 	 * Launch the application.
@@ -30,8 +27,8 @@ public class FoodList extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FoodList frame = new FoodList();
-					frame.setVisible(true);
+					FoodList f = new FoodList();
+					f.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -42,16 +39,28 @@ public class FoodList extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+
 	public FoodList() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 800, 600);
-		contentPane = new JPanel();
+		initialize() ;
+	}
+	
+	private void initialize() {
+		frame = new JFrame();
+		frame.setTitle("FoodList");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 800, 600);
+		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		
+		JPanel contentPane = new JPanel();
+		contentPane.setBounds(0,0,794,561);
+		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		
 		contentPane.setLayout(null);
+		contentPane.setVisible(true);
 		
-		
+	
 		//==============================Choice==============================
 		Choice choiceDate = new Choice();
 		choiceDate.setBounds(135, 83, 264, 21);
@@ -67,18 +76,33 @@ public class FoodList extends JFrame {
 		btnMain.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		contentPane.add(btnMain);
 		
+		
+		
+		
 		JButton btnExer = new JButton("¿îµ¿");
 		btnExer.setBounds(145, 10, 121, 67);
 		btnExer.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		contentPane.add(btnExer);
+		
+		
 		
 		JButton btnRept = new JButton("¸®Æ÷Æ®");
 		btnRept.setBounds(278, 10, 121, 67);
 		btnRept.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		contentPane.add(btnRept);
 		
+		btnRept.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		
 		JButton btnSearch = new JButton("°Ë»ö");
-		btnSearch.setBounds(714, 10, 58, 40);
+		btnSearch.setBounds(706, 10, 66, 40);
 		contentPane.add(btnSearch);
 		
 		JButton btnPlus = new JButton("+");
@@ -99,17 +123,17 @@ public class FoodList extends JFrame {
 	
 		
 		//==============================JTextField==============================
-		fieldSearch = new JTextField();
-		fieldSearch.setBounds(463, 10, 239, 40);
+		JTextField fieldSearch = new JTextField();
+		fieldSearch.setBounds(463, 10, 231, 40);
 		contentPane.add(fieldSearch);
 		fieldSearch.setColumns(10);
 		
-		fieldCount = new JTextField();
+		JTextField fieldCount = new JTextField();
 		fieldCount.setBounds(70, 512, 58, 39);
 		contentPane.add(fieldCount);
 		fieldCount.setColumns(10);
 		
-		fieldTC = new JTextField();
+		JTextField fieldTC = new JTextField();
 		fieldTC.setBounds(541, 511, 231, 33);
 		contentPane.add(fieldTC);
 		fieldTC.setColumns(10);
