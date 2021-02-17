@@ -16,9 +16,9 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ExerciseList extends JFrame {
+public class ExerciseList  {
 
-	private JFrame frame;
+	JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -75,6 +75,13 @@ public class ExerciseList extends JFrame {
 		choiceDate.setBounds(135, 83, 264, 21);
 		contentPane.add(choiceDate);
 		
+		for (int i = 2021 ; i < 2023 ; i++) {
+			for(int j =1 ; j <=12 ; j++) {
+				for(int k=1 ; k <=31 ; k++) {
+					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
+				}
+			}
+		}
 		//====================================JButton====================================
 		JButton btnMain = new JButton("메인");
 		btnMain.setBounds(12, 10, 121, 67);
@@ -86,10 +93,31 @@ public class ExerciseList extends JFrame {
 		btnFoodlist.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnFoodlist);
 		
+		btnFoodlist.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FoodList fl = new FoodList();
+				fl.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
+		
 		JButton btnRept = new JButton("리포트");
 		btnRept.setBounds(278, 10, 121, 67);
 		btnRept.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnRept);
+		
+		btnRept.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Report rp = new Report();
+				rp.frame.setVisible(true);
+				frame.dispose();
+			}
+		});
 		
 		JButton btnSearch = new JButton("검색");
 		btnSearch.setBounds(702, 10, 70, 40);

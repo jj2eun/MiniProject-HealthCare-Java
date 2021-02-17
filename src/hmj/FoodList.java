@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 public class FoodList {
-	private JFrame frame;
+	 JFrame frame;
 	
 
 	/**
@@ -65,24 +65,56 @@ public class FoodList {
 		Choice choiceDate = new Choice();
 		choiceDate.setBounds(135, 83, 264, 21);
 		contentPane.add(choiceDate);
+		for (int i = 2021 ; i < 2023 ; i++) {
+			for(int j =1 ; j <=12 ; j++) {
+				for(int k=1 ; k <=31 ; k++) {
+					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
+				}
+			}
+		}
+		
 		
 		Choice choiceTime = new Choice();
 		choiceTime.setBounds(135, 110, 264, 21);
 		contentPane.add(choiceTime);
 		
+		choiceTime.add("아침");
+		choiceTime.add("점심");
+		choiceTime.add("저녁");
+		choiceTime.add("간식");
 		//==============================JButton==============================
 		JButton btnMain = new JButton("메인");
 		btnMain.setBounds(12, 10, 121, 67);
 		btnMain.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnMain);
 		
-		
+		btnMain.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Main m = new Main();
+				m.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
 		
 		
 		JButton btnExer = new JButton("운동");
 		btnExer.setBounds(145, 10, 121, 67);
 		btnExer.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnExer);
+		
+		btnExer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ExerciseList ex = new ExerciseList();
+				ex.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
 		
 		
 		
@@ -95,8 +127,9 @@ public class FoodList {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
+				Report rp = new Report();
+				rp.frame.setVisible(true);
+				frame.dispose();
 			}
 		});
 		

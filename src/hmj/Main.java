@@ -9,10 +9,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JSeparator;
 import java.awt.*;
 public class Main  {
-	private JFrame frame;
+	JFrame frame;
 	
 
 	/**
@@ -59,15 +62,48 @@ public class Main  {
 		btnFoodlist.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		contentPane.add(btnFoodlist);
 		
+		btnFoodlist.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FoodList fl = new FoodList();
+				fl.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
+		
 		JButton btnExer = new JButton("¿îµ¿");
 		btnExer.setBounds(304, 20, 167, 50);
 		btnExer.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		contentPane.add(btnExer);
 		
+		btnExer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ExerciseList ex = new ExerciseList();
+				ex.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
+		
 		JButton btnRept = new JButton("¸®Æ÷Æ®");
 		btnRept.setBounds(564, 20, 167, 50);
 		btnRept.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		contentPane.add(btnRept);
+		
+		btnRept.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Report rp = new Report();
+				rp.frame.setVisible(true);
+				frame.dispose();
+			}
+		});
+		
 	}
 
 }

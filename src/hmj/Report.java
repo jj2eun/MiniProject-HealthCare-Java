@@ -8,13 +8,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-public class Report extends JFrame {
+public class Report  {
 
-	private JFrame frame;
+	JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -61,15 +64,48 @@ public class Report extends JFrame {
 		btnMain.setBounds(40, 20, 167, 50);
 		contentPane.add(btnMain);
 		
+		btnMain.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Main m = new Main();
+				m.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
+		
 		JButton btnFoodlist = new JButton("½Ä´Ü");
 		btnFoodlist.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		btnFoodlist.setBounds(304, 20, 167, 50);
 		contentPane.add(btnFoodlist);
 		
+		btnFoodlist.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FoodList fl = new FoodList();
+				fl.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
+		
 		JButton btnExer = new JButton("¿îµ¿");
 		btnExer.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		btnExer.setBounds(564, 20, 167, 50);
 		contentPane.add(btnExer);
+		
+		btnExer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ExerciseList ex = new ExerciseList();
+				ex.frame.setVisible(true);
+				frame.dispose();
+				
+			}
+		});
 		
 		JButton btnWeightSave = new JButton("OK");
 		btnWeightSave.setFont(new Font("±¼¸²", Font.BOLD, 20));
