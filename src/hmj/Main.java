@@ -6,23 +6,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.*;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.awt.*;
-import com.toedter.calendar.JCalendar;
-import com.toedter.calendar.JDayChooser;
+import com.toedter.calendar.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 public class Main  {
 	JFrame frame;
 	LocalDate today = LocalDate.now();
-	float[] arr = new float[32];
 	/**
 	 * Launch the application.
 	 */
@@ -70,8 +65,19 @@ public class Main  {
 		contentPane.add(calendar);
 		JPanel jpanel = calendar.getDayChooser().getDayPanel();
 		Component component[] = jpanel.getComponents();
-		calTrafficLight(component);
+		calTrafficLight(component, today);
+		// default로 오늘(Date)를 넘겨준다
 		
+		calendar.getMonthChooser().addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				//System.out.println(evt.getPropertyName()+ ": " + evt.getNewValue());
+				if (evt.getPropertyName().toString() == "month") {
+					LocalDate date = today.withMonth(Integer.parseInt(evt.getNewValue().toString())+ 1);
+					calTrafficLight(component, date);
+				} // 변경된 property명이 month일 경우 해당 month의 date를 넘겨준다
+				
+			}
+		}); // 캘린더 month변경 이벤트 핸들러
 		
 		//====================================JButton====================================
 		/* 식단입력 버튼 */
@@ -138,7 +144,7 @@ public class Main  {
 		lblCal2.setBounds(435, 111, 180, 50);
 		contentPane.add(lblCal2);
 		lblCal2.setFont(new Font("맑은 고딕", Font.PLAIN, 50));
-		//getCal2(lblCal2);
+		getCal2(lblCal2);
 		
 		JLabel lblText = new JLabel("하루권장 칼로리");
 		lblText.setFont(new Font("맑은 고딕", Font.BOLD, 13));
@@ -156,7 +162,7 @@ public class Main  {
 		float result = 0;
 		DatabaseDAO dao = new DatabaseDAO();
 		String sql;
-		sql = "Select Day_Cal, Use_Cal from report where User_no = and Date =";
+		sql = "Select Day_Cal, Use_Cal from report where User_no = 1 and Date = "+ today+";";
 		ResultSet rs = dao.getInfo(sql);
 		
 		try {
@@ -201,16 +207,16 @@ public class Main  {
 		// 라벨에 뿌리기 
 	}
 	
-	public void calTrafficLight(Component component[]) {
-		
+	public void calTrafficLight(Component component[], LocalDate changedDate) {
+		float[] arr = new float[32];
 		// 현재 달력의 월 get
 		// 해당월의 일별로 db.report의 총칼로리 계산
 		
 		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
-		LocalDate firstDay = today.with(TemporalAdjusters.firstDayOfMonth()); // 2021-02-01
-		LocalDate lastDay = today.with(TemporalAdjusters.lastDayOfMonth()); // 2021-02-28
+		LocalDate firstDay = changedDate.with(TemporalAdjusters.firstDayOfMonth()); // 2021-02-01
+		LocalDate lastDay = changedDate.with(TemporalAdjusters.lastDayOfMonth()); // 2021-02-28
 		float recCal = 0;
 		DatabaseDAO dao = new DatabaseDAO();
 		String sql;
@@ -224,7 +230,7 @@ public class Main  {
 				recCal = rs.getFloat("Day_Recommend_Cal");
 				String date = transFormat.format(rs.getDate("Report_Date"));
 				int i = Integer.parseInt(date.substring(8)); // 일자만 i에 담기
-				System.out.println("i : "+i + "date: "+date);
+				//System.out.println("i : "+i + "date: "+date);
 				arr[i] = totalCal;
 			}
 		} catch (SQLException e) {
