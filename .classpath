@@ -6,15 +6,16 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/황민재/eclipse/jee-2020-12/eclipse/mariadb-java-client-2.7.2.jar">
+	<classpathentry kind="lib" path="C:/Users/kitri/eclipse/jee-2020-12/eclipse/mariadb-java-client-2.7.2.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/황민재/eclipse/jee-2020-12/eclipse/json-simple-1.1.1.jar">
+	<classpathentry kind="lib" path="C:/Users/kitri/eclipse/jee-2020-12/eclipse/json-simple-1.1.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="jcalendar-1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
