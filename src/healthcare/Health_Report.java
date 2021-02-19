@@ -1,12 +1,13 @@
+package healthcare;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
 
-public class TestFrame extends JFrame {
+public class Health_Report extends JFrame {
 
 	private JPanel contentPane;
 
@@ -14,11 +15,10 @@ public class TestFrame extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		System.out.println();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TestFrame frame = new TestFrame();
+					Health_Report frame = new Health_Report();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,16 +30,13 @@ public class TestFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TestFrame() {
+	public Health_Report() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 510, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.setBounds(36, 10, 97, 23);
-		contentPane.add(btnNewButton);
 	}
+
 }
