@@ -1,22 +1,27 @@
 package healthcare;
-import javax.swing.*;
-import java.awt.BorderLayout;
+import java.awt.Choice;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JList;
-import java.awt.Choice;
-import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 public class FoodList {
 	DBConnect db = new DBConnect();
@@ -27,9 +32,18 @@ public class FoodList {
 	 
 	//jtable
 		Object ob[] [] =new Object[0][3];
+		Object ob2[] [] = new Object[0][2];
 		DefaultTableModel model;
-		
+		DefaultTableModel morningmodel;
+		DefaultTableModel lunchmodel;
+		DefaultTableModel dinnermodel;
+		DefaultTableModel dessertmodel;
 		String str[] = {"Food_no","Food_Name","Food_Cal"};
+		String str2[]={"Food_Name","Food_Cal"};
+//		String morningstr[]={"Food_Name","Food_Cal"};
+//		String lunchstr[]={"Food_Name","Food_Cal"};
+//		String dinnerstr[]={"Food_Name","Food_Cal"};
+//		String dessertstr[]={"Food_Name","Food_Cal"};
 	 /**
 		 * @wbp.parser.constructor
 		 */
@@ -179,6 +193,8 @@ public class FoodList {
 		contentPane.add(fieldSearch);
 		fieldSearch.setColumns(10);
 		
+		
+		
 		JTextField fieldCount = new JTextField();
 		fieldCount.setBounds(70, 512, 58, 39);
 		contentPane.add(fieldCount);
@@ -191,7 +207,16 @@ public class FoodList {
 		
 	
 		//==================== JList==============================
+		
+		
+		
+		
 		model = new DefaultTableModel(ob,str);
+		morningmodel = new DefaultTableModel(ob2,str2);
+		lunchmodel = new DefaultTableModel(ob2,str2);
+		dinnermodel = new DefaultTableModel(ob2,str2);
+		dessertmodel = new DefaultTableModel(ob2,str2);
+		
 		try {
 			 ResultSet rs = db.getInfo("SELECT * FROM nutrient;");
 			 while(rs.next()) {
@@ -208,29 +233,53 @@ public class FoodList {
 		
 		
 		JTable table = new JTable(model);
+		JTable morningTable = new JTable(morningmodel);
+		JTable lunchTable = new JTable(lunchmodel);
+		JTable dinnerTable = new JTable(dinnermodel);
+		JTable dessertTable = new JTable(dessertmodel);
 		
-		
+//		@Override
+//		public void actionPerformed(ActionEvent e) {
+//			if(e.getSource()==fieldSearch.text())
+//		}
+//		
+//		
 		JScrollPane js = new JScrollPane(table);
-		
 		js.setLocation(12,136);
 		js.setSize(383, 365);
 		contentPane.add(js);
 		
-		JList listMoring = new JList();
-		listMoring.setBounds(463, 83, 317, 95);
-		contentPane.add(listMoring);
+		JScrollPane morningjs = new JScrollPane(morningTable);
+		morningjs.setLocation(463,83);
+		morningjs.setSize(317,95);
+		contentPane.add(morningjs);
 		
-		JList listLunch = new JList();
-		listLunch.setBounds(463, 188, 317, 95);
-		contentPane.add(listLunch);
+		JScrollPane lunchjs = new JScrollPane(lunchTable);
+		lunchjs.setLocation(463,188);
+		lunchjs.setSize(317,95);
+		contentPane.add(lunchjs);
 		
-		JList listDinner = new JList();
-		listDinner.setBounds(463, 293, 317, 95);
-		contentPane.add(listDinner);
-
-		JList listDessert = new JList();
-		listDessert.setBounds(463, 398, 317, 95);
-		contentPane.add(listDessert);
+		JScrollPane dinnerjs = new JScrollPane(dinnerTable);
+		dinnerjs.setLocation(463,293);
+		dinnerjs.setSize(317,95);
+		contentPane.add(dinnerjs);
+		
+		JScrollPane dessertjs = new JScrollPane(dessertTable);
+		dessertjs.setLocation(463,398);
+		dessertjs.setSize(317,95);
+		contentPane.add(dessertjs);
+		
+		
+		
+		fieldSearch.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				String val = fieldSearch.getText();//fieldsearch에서 텍스트가져오기
+				TableRowSorter<TableModel> trs = new TableRowSorter<>(table.getModel());
+				table.setRowSorter(trs);		//table row정렬 
+				trs.setRowFilter(RowFilter.regexFilter(val));
+			
+			}
+		});
 		
 		//==============================Label==============================
 		JLabel lblTC = new JLabel("총 칼로리");
