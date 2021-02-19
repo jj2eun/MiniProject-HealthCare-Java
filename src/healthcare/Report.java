@@ -19,8 +19,10 @@ public class Report  {
 
 	JFrame frame;
 	private String user_id;
-	
-	public Report() {}
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public Report() {initialize() ;}
 	public Report(String User_ID) {
 		user_id = User_ID;
 		System.out.println("user id : "+user_id);

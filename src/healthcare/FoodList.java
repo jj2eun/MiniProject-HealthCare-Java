@@ -19,8 +19,10 @@ import javax.swing.SwingConstants;
 public class FoodList {
 	 JFrame frame;
 	 private String user_id;
-	 
-	 public FoodList() {}
+	 /**
+		 * @wbp.parser.constructor
+		 */
+	 public FoodList() {initialize() ;}
 	 public FoodList(String User_ID) {
 		user_id = User_ID;
 		System.out.println("user id : "+user_id);

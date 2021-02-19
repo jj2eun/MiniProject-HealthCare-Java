@@ -19,8 +19,10 @@ import java.awt.event.ActionEvent;
 public class ExerciseList  {
 	JFrame frame;
 	private String user_id;
-	
-	public ExerciseList() {}
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public ExerciseList() {initialize() ;}
 	public ExerciseList(String User_ID) {
 		user_id = User_ID;
 		System.out.println("user id : "+user_id);

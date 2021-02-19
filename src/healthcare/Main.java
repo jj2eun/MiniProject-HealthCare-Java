@@ -20,8 +20,10 @@ public class Main  {
 	JFrame frame;
 	private LocalDate today = LocalDate.now();
 	private String user_id;
-	
-	public Main() {}
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public Main() {initialize();}
 	public Main(String User_ID) {
 		user_id = User_ID;
 		initialize();
