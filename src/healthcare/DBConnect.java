@@ -12,40 +12,29 @@ public class DBConnect {
 //		
 //
 //	}
-	public static void Login(String User_ID, String User_Password) {
+	public static int login(String User_ID, String User_Password) {
 
-//		String sql = "(SELECT User_Password FROM user_personal WHERE User_ID ='" + User_ID + "' and User_Password='" + User_Password+"')";
-//		try {
-//			Connection conn = getConnection();
-//			PreparedStatement stmt = conn.prepareStatement(sql);
-//			ResultSet rs = stmt.executeQuery();
-//			
-//			
-//
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//			
-//		}
-//		return;
+		int success = 0;
 
 		try {
 
 			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("(SELECT User_Password FROM user_personal WHERE User_ID ='"
-					+ User_ID + "' and User_Password='" + User_Password + "')");
+			PreparedStatement stmt = conn.prepareStatement(
+					"select User_Password from user_personal WHERE User_ID = ? AND User_Password = ?");
+			stmt.setString(1, User_ID);
+			stmt.setString(2, User_Password);
+
 			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				String User_ID1 = rs.getString("User_ID");
-				String User_Password2 = rs.getString("User_Password");
-
-				System.out.println(User_ID + "," + User_Password);
+				success++;
+				System.out.println("login success");
 			}
 
 		} catch (Exception e) {
 
 		}
-		return;
+		return success;
 
 	}
 
@@ -81,6 +70,28 @@ public class DBConnect {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+
+	}
+
+	public static void idCheck(String User_ID) {
+
+		try {
+
+			Connection conn = getConnection();
+			PreparedStatement stmt = conn.prepareStatement("select User_ID from user_personal WHERE User_ID = ?");
+			stmt.setString(1, User_ID);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				JOptionPane.showMessageDialog(null, "중복입니다.");
+			} else {
+				JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

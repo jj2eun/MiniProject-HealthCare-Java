@@ -246,12 +246,28 @@ public class Health_Join extends JFrame {
 					User_Gender = "W";
 				}
 
-				healthcare.DBConnect.createJoin(User_ID, User_Password, User_Name, User_Gender, User_Height, User_Weight,
-						Use_Act_Index);
-				JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다");
-				Health_Login Health_Login = new Health_Login();
-				dispose();
+				if (User_ID.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "아이디를 입력해주세요");
+				} else if (User_Password.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "비밀번호를 입력해주세요");
+				} else if (User_Name.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "이름을 입력해주세요");
+				} else if (User_Height.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "키(cm)를 입력해주세요");
+				} else if (User_Weight.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "몸무게(kg)를 입력해주세요");
+				} else if (Use_Act_Index == null) {
+					JOptionPane.showMessageDialog(null, "활동지수를 선택해주세요");
+				} else if (User_Gender == null) {
+					JOptionPane.showMessageDialog(null, "성별을 선택해주세요");
+				} else {
+					healthcare.DBConnect.createJoin(User_ID, User_Password, User_Name, User_Gender, User_Height,
+							User_Weight, Use_Act_Index);
+					JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다");
+					new Health_Login();
+					dispose();
 
+				}
 			}
 		});
 
@@ -270,7 +286,15 @@ public class Health_Join extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				String User_ID = id.getText();
 
+				if (User_ID.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(null, "아이디를 입력해주세요");
+
+				} else {
+
+					healthcare.DBConnect.idCheck(User_ID);
+				}
 			}
 
 		});
