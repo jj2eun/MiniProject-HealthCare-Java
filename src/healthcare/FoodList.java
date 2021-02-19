@@ -6,12 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,6 +27,7 @@ import javax.swing.table.TableRowSorter;
 
 public class FoodList {
 	DBConnect db = new DBConnect();
+	Calendar cal = Calendar.getInstance();
 	
 	
 	 JFrame frame;
@@ -70,9 +73,8 @@ public class FoodList {
 		System.out.println("user id : "+user_id);
 		initialize() ;
 		
-		
-		
 	}
+	 
 	 private void initialize() {
 		 
 		 
@@ -94,16 +96,24 @@ public class FoodList {
 		
 	
 		//==============================Choice==============================
+		
+		
 		Choice choiceDate = new Choice();
 		choiceDate.setBounds(135, 83, 264, 21);
 		contentPane.add(choiceDate);
+	
 		for (int i = 2021 ; i < 2023 ; i++) {
-			for(int j =1 ; j <=12 ; j++) {
-				for(int k=1 ; k <=31 ; k++) {
-					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
+			for(int month = 0 ; month <12 ; month++) {
+				cal.set(Calendar.MONTH,month);
+				int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+				for(int k=1 ; k <=maxDay ; k++) {
+
+					choiceDate.add(String.valueOf(i+"/"+(cal.get(Calendar.MONTH)+1)+"/"+k));
 				}
 			}
 		}
+		
 		
 		
 		Choice choiceTime = new Choice();
@@ -206,7 +216,7 @@ public class FoodList {
 		fieldTC.setColumns(10);
 		
 	
-		//==================== JList==============================
+		
 		
 		
 		
@@ -269,7 +279,36 @@ public class FoodList {
 		dessertjs.setSize(317,95);
 		contentPane.add(dessertjs);
 		
-		
+		btnPlus.addActionListener(new ActionListener() {
+	         @Override
+	         public void actionPerformed(ActionEvent e) {
+	            String data = "선택날짜: " + choiceDate.getItem(choiceDate.getSelectedIndex()) + " 타임선택값: "
+	                  + choiceTime.getItem(choiceTime.getSelectedIndex());
+
+	            int row = table.getSelectedRow();
+	            
+	               
+	               
+	               Object sdb[] = {
+	            		   
+	            		   table.getModel().getValueAt(row, 1),
+	            		   table.getModel().getValueAt(row, 2),
+	            		   
+	               };  
+	               if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
+	            	   morningmodel.addRow(sdb);
+	               } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "점심") {
+	            	   lunchmodel.addRow(sdb);
+	               } else if( choiceTime.getItem(choiceTime.getSelectedIndex()) == "저녁") {
+	            	   dinnermodel.addRow(sdb);
+	               } else if(choiceTime.getItem(choiceTime.getSelectedIndex()) == "간식") {
+	            	   dessertmodel.addRow(sdb);
+	               }
+	               
+	            
+	            
+	         }
+		});
 		
 		fieldSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
@@ -280,6 +319,45 @@ public class FoodList {
 			
 			}
 		});
+//		
+//		table.addMouseListener(new MouseListener() {
+//			
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void mousePressed(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void mouseExited(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//			
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				int row = table.getSelectedRow();
+//				int col = table.getSelectedColumn();
+//				for(int i = 0 ; i<table.getColumnCount(); i++) {
+//					System.out.print(table.getModel().getValueAt(row, i)+"\t");
+//				}
+//				
+//			}
+//		});
+	            //}
+//		
 		
 		//==============================Label==============================
 		JLabel lblTC = new JLabel("총 칼로리");
@@ -328,5 +406,4 @@ public class FoodList {
 		lblChoiceTime.setBounds(12, 110, 121, 21);
 		contentPane.add(lblChoiceTime);
 	}
-	 
 }
