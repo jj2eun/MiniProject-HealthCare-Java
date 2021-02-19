@@ -150,7 +150,7 @@ public class Main  {
 		float result = 0;
 		DBConnect dao = new DBConnect();
 		String sql;
-		sql = "Select Day_Cal, Use_Cal from report where User_no = 1 and Date = "+ today+";";
+		sql = "Select Day_Cal, Use_Cal from report where User_ID = '" + user_id + "' and Date = "+ today+";";
 		ResultSet rs = dao.getInfo(sql);
 		
 		try {
@@ -175,7 +175,7 @@ public class Main  {
 		Float height;
 		int active = 0;
 		float result = 0;
-		sql = "Select * from user_personal where User_no = 1;";
+		sql = "Select * from user_personal where User_ID = '" + user_id + "';";
 		// 회원번호별 유저정보 조회
 		
 		ResultSet rs = dao.getInfo(sql);
@@ -208,7 +208,7 @@ public class Main  {
 		float recCal = 0;
 		DBConnect dao = new DBConnect();
 		String sql;
-		sql = "Select * from report where User_no = 1 and Report_Date between '" + firstDay +"' and '" + lastDay+ "';";
+		sql = "Select * from report where User_ID = '" + user_id + "' and Report_Date between '" + firstDay +"' and '" + lastDay+ "';";
 		ResultSet rs = dao.getInfo(sql);
 		// today객체에 들어있는 달의 첫날~끝날의 레포트DB의 총칼로리 계산
 		try {
