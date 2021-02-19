@@ -6,8 +6,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JList;
@@ -17,18 +19,50 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 public class FoodList {
+	DBConnect db = new DBConnect();
+	
+	
 	 JFrame frame;
 	 private String user_id;
+	 
+	//jtable
+		Object ob[] [] =new Object[0][3];
+		DefaultTableModel model;
+		
+		String str[] = {"Food_no","Food_Name","Food_Cal"};
 	 /**
 		 * @wbp.parser.constructor
 		 */
+		
+	public static void main(String[] args) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						FoodList f = new FoodList();
+						f.frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			new FoodList();
+			
+		}
+	
+	
 	 public FoodList() {initialize() ;}
 	 public FoodList(String User_ID) {
 		user_id = User_ID;
 		System.out.println("user id : "+user_id);
 		initialize() ;
+		
+		
+		
 	}
 	 private void initialize() {
+		 
+		 
+		 
 		frame = new JFrame();
 		frame.setTitle("FoodList");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -157,9 +191,30 @@ public class FoodList {
 		
 	
 		//==================== JList==============================
-		JList listFood = new JList();
-		listFood.setBounds(12, 137, 387, 364);
-		contentPane.add(listFood);
+		model = new DefaultTableModel(ob,str);
+		try {
+			 ResultSet rs = db.getInfo("SELECT * FROM nutrient;");
+			 while(rs.next()) {
+				 String Food_no = rs.getString("Food_no");
+				 String Food_Name = rs.getString("Food_Name");
+				 Float Food_Cal = rs.getFloat("Food_Cal");
+				 Object data[] = {Food_no,Food_Name,Food_Cal};
+				 model.addRow(data);
+				
+			 }
+			 }catch(Exception e) {
+				 System.out.println("select() 실행 오류 : " + e.getMessage());
+			 }
+		
+		
+		JTable table = new JTable(model);
+		
+		
+		JScrollPane js = new JScrollPane(table);
+		
+		js.setLocation(12,136);
+		js.setSize(383, 365);
+		contentPane.add(js);
 		
 		JList listMoring = new JList();
 		listMoring.setBounds(463, 83, 317, 95);
@@ -224,4 +279,5 @@ public class FoodList {
 		lblChoiceTime.setBounds(12, 110, 121, 21);
 		contentPane.add(lblChoiceTime);
 	}
+	 
 }
