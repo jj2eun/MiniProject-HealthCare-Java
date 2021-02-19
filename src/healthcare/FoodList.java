@@ -1,4 +1,4 @@
-package hmj;
+package healthcare;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -18,33 +18,15 @@ import javax.swing.SwingConstants;
 
 public class FoodList {
 	 JFrame frame;
-	
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					FoodList f = new FoodList();
-//					f.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
-	 */
-
-	public FoodList() {
+	 private String user_id;
+	 
+	 public FoodList() {}
+	 public FoodList(String User_ID) {
+		user_id = User_ID;
+		System.out.println("user id : "+user_id);
 		initialize() ;
 	}
-	
-	private void initialize() {
+	 private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("FoodList");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,7 +74,7 @@ public class FoodList {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main m = new Main();
+				Main m = new Main(user_id);
 				m.frame.setVisible(true);
 				frame.dispose();
 				
@@ -109,7 +91,7 @@ public class FoodList {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ExerciseList ex = new ExerciseList();
+				ExerciseList ex = new ExerciseList(user_id);
 				ex.frame.setVisible(true);
 				frame.dispose();
 				
@@ -127,7 +109,7 @@ public class FoodList {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Report rp = new Report();
+				Report rp = new Report(user_id);
 				rp.frame.setVisible(true);
 				frame.dispose();
 			}

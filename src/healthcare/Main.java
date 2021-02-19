@@ -1,8 +1,9 @@
-package hmj;
+package healthcare;
 import javax.swing.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import com.toedter.calendar.JCalendar;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,34 +13,19 @@ import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.awt.*;
-import com.toedter.calendar.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+
 public class Main  {
 	JFrame frame;
-	LocalDate today = LocalDate.now();
-	/**
-	 * Launch the application.
-	 */
-	/*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Main m = new Main();
-					m.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
-	/**
-	 * Create the frame.
-	 */
-	public Main() {
+	private LocalDate today = LocalDate.now();
+	private String user_id;
+	
+	public Main() {}
+	public Main(String User_ID) {
+		user_id = User_ID;
 		initialize();
+		System.out.println(user_id);
 	}
 	public void mainInit() {
 		initialize();
@@ -90,7 +76,7 @@ public class Main  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FoodList fl = new FoodList();
+				FoodList fl = new FoodList(user_id);
 				fl.frame.setVisible(true);
 				frame.dispose();
 				
@@ -106,7 +92,7 @@ public class Main  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ExerciseList ex = new ExerciseList();
+				ExerciseList ex = new ExerciseList(user_id);
 				ex.frame.setVisible(true);
 				frame.dispose();
 				
@@ -122,7 +108,7 @@ public class Main  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Report rp = new Report();
+				Report rp = new Report(user_id);
 				rp.frame.setVisible(true);
 				frame.dispose();
 			}
@@ -160,7 +146,7 @@ public class Main  {
 		float cur_cal = 0;
 		float use_cal = 0;
 		float result = 0;
-		DatabaseDAO dao = new DatabaseDAO();
+		DBConnect dao = new DBConnect();
 		String sql;
 		sql = "Select Day_Cal, Use_Cal from report where User_no = 1 and Date = "+ today+";";
 		ResultSet rs = dao.getInfo(sql);
@@ -182,7 +168,7 @@ public class Main  {
 		// 유저정보를 db에서 불러와서 권장칼로리 계산하기
 		// 하루 권장 칼로리 = <표준체중>(자신의키 - 100)*0.9 * 활동지수
 		// 활동지수  = HIGH : 60  MID : 40  LOW:20
-		DatabaseDAO dao = new DatabaseDAO();
+		DBConnect dao = new DBConnect();
 		String sql;
 		Float height;
 		int active = 0;
@@ -218,7 +204,7 @@ public class Main  {
 		LocalDate firstDay = changedDate.with(TemporalAdjusters.firstDayOfMonth()); // 2021-02-01
 		LocalDate lastDay = changedDate.with(TemporalAdjusters.lastDayOfMonth()); // 2021-02-28
 		float recCal = 0;
-		DatabaseDAO dao = new DatabaseDAO();
+		DBConnect dao = new DBConnect();
 		String sql;
 		sql = "Select * from report where User_no = 1 and Report_Date between '" + firstDay +"' and '" + lastDay+ "';";
 		ResultSet rs = dao.getInfo(sql);

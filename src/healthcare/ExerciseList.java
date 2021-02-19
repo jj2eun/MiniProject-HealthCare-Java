@@ -1,4 +1,4 @@
-package hmj;
+package healthcare;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -17,30 +17,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ExerciseList  {
-
 	JFrame frame;
-
-	/**
-	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					ExerciseList el = new ExerciseList();
-//					el.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
-	 */
+	private String user_id;
 	
-	public ExerciseList() {
+	public ExerciseList() {}
+	public ExerciseList(String User_ID) {
+		user_id = User_ID;
+		System.out.println("user id : "+user_id);
 		initialize();
 	}
 	
@@ -97,7 +80,7 @@ public class ExerciseList  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FoodList fl = new FoodList();
+				FoodList fl = new FoodList(user_id);
 				fl.frame.setVisible(true);
 				frame.dispose();
 				
@@ -113,7 +96,7 @@ public class ExerciseList  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Report rp = new Report();
+				Report rp = new Report(user_id);
 				rp.frame.setVisible(true);
 				frame.dispose();
 			}

@@ -1,4 +1,4 @@
-package hmj;
+package healthcare;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -18,27 +18,12 @@ import javax.swing.SwingConstants;
 public class Report  {
 
 	JFrame frame;
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Report rp = new Report();
-//					rp.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
-	 */
-	public Report() {
+	private String user_id;
+	
+	public Report() {}
+	public Report(String User_ID) {
+		user_id = User_ID;
+		System.out.println("user id : "+user_id);
 		initialize() ;
 	}
 	
@@ -68,7 +53,7 @@ public class Report  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Main m = new Main();
+				Main m = new Main(user_id);
 				m.frame.setVisible(true);
 				frame.dispose();
 				
@@ -84,7 +69,7 @@ public class Report  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				FoodList fl = new FoodList();
+				FoodList fl = new FoodList(user_id);
 				fl.frame.setVisible(true);
 				frame.dispose();
 				
@@ -100,7 +85,7 @@ public class Report  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ExerciseList ex = new ExerciseList();
+				ExerciseList ex = new ExerciseList(user_id);
 				ex.frame.setVisible(true);
 				frame.dispose();
 				

@@ -1,5 +1,4 @@
 package healthcare;
-
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -25,20 +24,7 @@ public class Health_Login extends JFrame {
 	private JButton exitBtn;
 	private JPasswordField loginPWD;
 
-	// 에플리케이션 런치
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Health_Login frame = new Health_Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
+	
 	// 프레임 생성
 	public Health_Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,9 +123,12 @@ public class Health_Login extends JFrame {
 				// 로그인 후 넘어가기
 				int login = healthcare.DBConnect.login(User_ID, User_Password);
 				if (login >= 1) {
-
-					// new Health_Join();
-					// new Maintest(User_ID, User_Password);
+					Main main = new Main(User_ID);
+					dispose();
+					main.frame.setVisible(true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "로그인 실패");
 				}
 			}
 		});

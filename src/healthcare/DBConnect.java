@@ -6,12 +6,27 @@ import javax.swing.JOptionPane;
 
 public class DBConnect {
 
-//	public static void main(String[] args) {
-//		
-//		getConnection();
-//		
-//
-//	}
+	public ResultSet getInfo(String query) {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		String sql;
+		conn = getConnection();
+		
+		//this.sql = "SELECT * FROM exercise limit 5";
+		sql = query;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return rs;
+	} // 정보 조회
+	
+	
+	// =================== 로그인 DB Connect ==============================
 	public static int login(String User_ID, String User_Password) {
 
 		int success = 0;
@@ -36,7 +51,7 @@ public class DBConnect {
 		}
 		return success;
 
-	}
+	} // 로그인 정보 저장
 
 	public static void createJoin(String User_ID, String User_Password, String User_Name, String User_Gender,
 			String User_Height, String User_Weight, String Use_Act_Index) {
@@ -51,8 +66,29 @@ public class DBConnect {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-	}
+	} // 회원가입 정보 저장
+	
+	public static void idCheck(String User_ID) {
 
+		try {
+
+			Connection conn = getConnection();
+			PreparedStatement stmt = conn.prepareStatement("select User_ID from user_personal WHERE User_ID = ?");
+			stmt.setString(1, User_ID);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				JOptionPane.showMessageDialog(null, "중복입니다.");
+			} else {
+				JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	} // ID 중복체크
+	
 	public static Connection getConnection() {
 
 		try {
@@ -72,28 +108,11 @@ public class DBConnect {
 			return null;
 		}
 
+	} // Get Connection
+	
+	public static void closeConnection() {
+		
 	}
-
-	public static void idCheck(String User_ID) {
-
-		try {
-
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("select User_ID from user_personal WHERE User_ID = ?");
-			stmt.setString(1, User_ID);
-			ResultSet rs = stmt.executeQuery();
-
-			if (rs.next()) {
-				JOptionPane.showMessageDialog(null, "중복입니다.");
-			} else {
-				JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
-			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
+	// Close Connection
 
 }
