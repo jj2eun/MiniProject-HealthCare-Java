@@ -1,5 +1,4 @@
 package healthcare;
-import java.awt.Choice;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +11,7 @@ import java.sql.ResultSet;
 import java.util.Calendar;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,9 +36,6 @@ public class ExerciseList  {
 	String str1[] = {"운동코드","운동이름","소모칼로리"};
 	String str2[] = {"PK", "사용자ID", "날짜", "운동코드", "운동이름", "소모칼로리", "운동시간"};
 	String selectedDate;
-	/**
-	 * @wbp.parser.constructor
-	 */
 	public ExerciseList() {initialize() ;}
 	public ExerciseList(String User_ID) {
 		user_id = User_ID;
@@ -63,14 +60,6 @@ public class ExerciseList  {
 		contentPane.setVisible(true);
 		
 	
-		//====================================JTable====================================
-//		JTable tableExercise = new JTable();
-//		tableExercise.setBounds(12, 110, 387, 391);
-//		contentPane.add(tableExercise);
-//		
-//		JTable tableMyexer = new JTable();
-//		tableMyexer.setBounds(412, 110, 347, 391);
-//		contentPane.add(tableMyexer);
 		
 		//====================================Choice====================================
 	      Calendar calender = Calendar.getInstance();
@@ -86,23 +75,20 @@ public class ExerciseList  {
 	       
 	       System.out.println(selectedDate);
 
-	       
-		
-		Choice choiceDate = new Choice();
-		choiceDate.setBounds(135, 83, 264, 21);
-		contentPane.add(choiceDate);
-		
-		for (int i = 2021 ; i < 2023 ; i++) {
+	    JComboBox<String> combo = new JComboBox<String>();
+	    combo.setBounds(135, 83, 264, 21);
+		contentPane.add(combo);
+	    for (int i = 2021 ; i < 2023 ; i++) {
 			for(int j =1 ; j <=12 ; j++) {
 				for(int k=1 ; k <=31 ; k++) {
-					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
+					combo.addItem(String.valueOf(i+"년"+j+"월"+k+"일"));
 				}
 			}
 		}
+	    
+	    combo.setSelectedItem(today_year + "년" + today_month + "월" + today_day + "일");
 		
-		choiceDate.select(today_year + "년" + today_month + "월" + today_day + "일");
-		
-		choiceDate.addItemListener(new ItemListener() {
+	    combo.addItemListener(new ItemListener() {
 	           public void itemStateChanged(ItemEvent e) {
 	        	   
 	              System.out.println(e.getItem());
@@ -111,6 +97,30 @@ public class ExerciseList  {
 	              
 	           }
 	        });
+	    
+		
+//		Choice choiceDate = new Choice();
+//		choiceDate.setBounds(135, 83, 264, 21);
+//		contentPane.add(choiceDate);
+//		for (int i = 2021 ; i < 2023 ; i++) {
+//			for(int j =1 ; j <=12 ; j++) {
+//				for(int k=1 ; k <=31 ; k++) {
+//					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
+//				}
+//			}
+//		}
+//		
+//		choiceDate.select(today_year + "년" + today_month + "월" + today_day + "일");
+//		
+//		choiceDate.addItemListener(new ItemListener() {
+//	           public void itemStateChanged(ItemEvent e) {
+//	        	   
+//	              System.out.println(e.getItem());
+//	              selectedDate = (String) e.getItem();
+//	              System.out.println(selectedDate);
+//	              
+//	           }
+//	        });
 		//====================================JButton====================================
 		JButton btnMain = new JButton("메인");
 		btnMain.setBounds(12, 10, 121, 67);
