@@ -1,4 +1,5 @@
 package healthcare;
+import java.awt.Choice;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +12,6 @@ import java.sql.ResultSet;
 import java.util.Calendar;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -75,20 +75,44 @@ public class ExerciseList  {
 	       
 	       System.out.println(selectedDate);
 
-	    JComboBox<String> combo = new JComboBox<String>();
-	    combo.setBounds(135, 83, 264, 21);
-		contentPane.add(combo);
-	    for (int i = 2021 ; i < 2023 ; i++) {
+//			JComboBox<String> combo = new JComboBox<String>();
+//			combo.setBounds(135, 83, 264, 21);
+//			contentPane.add(combo);
+//			for (int i = 2021; i < 2023; i++) {
+//				for (int j = 1; j <= 12; j++) {
+//					for (int k = 1; k <= 31; k++) {
+//						combo.addItem(String.valueOf(i + "년" + j + "월" + k + "일"));
+//					}
+//				}
+//			}
+//
+//			combo.setSelectedItem(today_year + "년" + today_month + "월" + today_day + "일");
+//
+//			combo.addItemListener(new ItemListener() {
+//				public void itemStateChanged(ItemEvent e) {
+//
+//					System.out.println(e.getItem());
+//					selectedDate = (String) e.getItem();
+//					System.out.println(selectedDate);
+//
+//				}
+//			});
+	    
+		
+		Choice choiceDate = new Choice();
+		choiceDate.setBounds(135, 83, 264, 21);
+		contentPane.add(choiceDate);
+		for (int i = 2021 ; i < 2023 ; i++) {
 			for(int j =1 ; j <=12 ; j++) {
 				for(int k=1 ; k <=31 ; k++) {
-					combo.addItem(String.valueOf(i+"년"+j+"월"+k+"일"));
+					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
 				}
 			}
 		}
-	    
-	    combo.setSelectedItem(today_year + "년" + today_month + "월" + today_day + "일");
 		
-	    combo.addItemListener(new ItemListener() {
+		choiceDate.select(today_year + "년" + today_month + "월" + today_day + "일");
+		
+		choiceDate.addItemListener(new ItemListener() {
 	           public void itemStateChanged(ItemEvent e) {
 	        	   
 	              System.out.println(e.getItem());
@@ -97,30 +121,6 @@ public class ExerciseList  {
 	              
 	           }
 	        });
-	    
-		
-//		Choice choiceDate = new Choice();
-//		choiceDate.setBounds(135, 83, 264, 21);
-//		contentPane.add(choiceDate);
-//		for (int i = 2021 ; i < 2023 ; i++) {
-//			for(int j =1 ; j <=12 ; j++) {
-//				for(int k=1 ; k <=31 ; k++) {
-//					choiceDate.add(String.valueOf(i+"년"+j+"월"+k+"일"));
-//				}
-//			}
-//		}
-//		
-//		choiceDate.select(today_year + "년" + today_month + "월" + today_day + "일");
-//		
-//		choiceDate.addItemListener(new ItemListener() {
-//	           public void itemStateChanged(ItemEvent e) {
-//	        	   
-//	              System.out.println(e.getItem());
-//	              selectedDate = (String) e.getItem();
-//	              System.out.println(selectedDate);
-//	              
-//	           }
-//	        });
 		//====================================JButton====================================
 		JButton btnMain = new JButton("메인");
 		btnMain.setBounds(12, 10, 121, 67);
@@ -158,9 +158,6 @@ public class ExerciseList  {
 			}
 		});
 		
-		JButton btnSearch = new JButton("검색");
-		btnSearch.setBounds(702, 10, 70, 40);
-		contentPane.add(btnSearch);
 		
 		JButton btnPlus = new JButton("+");
 		btnPlus.setBounds(135, 511, 80, 40);
@@ -179,7 +176,7 @@ public class ExerciseList  {
 		
 		//====================================TextField====================================
 		JTextField fieldSearch = new JTextField();
-		fieldSearch.setBounds(412, 10, 278, 40);
+		fieldSearch.setBounds(432, 10, 320, 40);
 		fieldSearch.setColumns(10);
 		contentPane.add(fieldSearch);
 		
