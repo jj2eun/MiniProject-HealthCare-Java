@@ -98,11 +98,11 @@ public class FoodList {
 		contentPane.setLayout(null);
 
 		// ==============================Choice==============================
-		Calendar calender = Calendar.getInstance();
+		Calendar calender1 = Calendar.getInstance();
 
-		int today_year = calender.get(Calendar.YEAR);
-		int today_month = calender.get(Calendar.MONTH) + 1;
-		int today_day = calender.get(Calendar.DAY_OF_MONTH);
+		int today_year = calender1.get(Calendar.YEAR);
+		int today_month = calender1.get(Calendar.MONTH) + 1;
+		int today_day = calender1.get(Calendar.DAY_OF_MONTH);
 
 		String m = String.format("%02d", today_month);
 		String d = String.format("%02d", today_day);
@@ -113,9 +113,11 @@ public class FoodList {
 		choiceDate.setBounds(135, 83, 211, 20);
 		contentPane.add(choiceDate);
 
+		Calendar calender2 = Calendar.getInstance();
 		for (int i = 2021; i < 2023; i++) {
 			for (int j = 1; j <= 12; j++) {
-				for (int k = 1; k <= 31; k++) {
+				calender2.set(i, j - 1, 1);
+				for (int k = 1; k <= calender2.getActualMaximum(Calendar.DAY_OF_MONTH); k++) {
 					choiceDate.add(String.valueOf(i + "-" + j + "-" + k));
 				}
 			}
@@ -361,7 +363,7 @@ public class FoodList {
 				} else {
 					Object sdb[] = { table.getModel().getValueAt(row, 0), table.getModel().getValueAt(row, 1),
 							table.getModel().getValueAt(row, 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
-																							// ->
+					// ->
 					// sdb[]에 담기
 
 					if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
