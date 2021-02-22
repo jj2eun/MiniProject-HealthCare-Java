@@ -216,7 +216,7 @@ public class Main  {
 			while(rs.next()) {
 				// 날짜별 총 칼로리 불러오기
 				float totalCal = rs.getFloat("Day_Cal") - rs.getFloat("Day_Use_Cal");
-				recCal = rs.getFloat("Day_Recommend_Cal");
+				//recCal = rs.getFloat("Day_Recommend_Cal");
 				String date = transFormat.format(rs.getDate("Report_Date"));
 				int i = Integer.parseInt(date.substring(8)); // 일자만 i에 담기
 				//System.out.println("i : "+i + "date: "+date);
@@ -227,7 +227,7 @@ public class Main  {
 		}
 		System.out.println("firstday: " + firstDay);
 		System.out.println("lastday: "+lastDay);
-		setCalColor(arr, component, recCal);
+		//setCalColor(arr, component, recCal);
 		
 	}
 	
