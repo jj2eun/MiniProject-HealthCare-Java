@@ -124,22 +124,22 @@ public class Main {
 		});
 
 		/* ===================== 라벨 =================== */
-		JLabel lblCal1 = new JLabel("0");
+		JLabel lblCal1 = new JLabel(getCal());
 		lblCal1.setBounds(248, 111, 138, 50);
 		lblCal1.setFont(new Font("맑은 고딕", Font.PLAIN, 50));
 		contentPane.add(lblCal1);
-		// getCal(lblCal1);
+//		 getCal(lblCal1);
 
 		JLabel lblSlash = new JLabel("/");
 		lblSlash.setBounds(359, 111, 64, 50);
 		lblSlash.setFont(new Font("맑은 고딕", Font.PLAIN, 50));
 		contentPane.add(lblSlash);
 
-		JLabel lblCal2 = new JLabel("0");
+		JLabel lblCal2 = new JLabel(getCal2());
 		lblCal2.setBounds(435, 111, 180, 50);
 		contentPane.add(lblCal2);
 		lblCal2.setFont(new Font("맑은 고딕", Font.PLAIN, 50));
-		getCal2(lblCal2);
+//		getCal2(lblCal2);
 
 		JLabel lblText = new JLabel("하루권장 칼로리");
 		lblText.setFont(new Font("맑은 고딕", Font.BOLD, 13));
@@ -150,57 +150,45 @@ public class Main {
 	}
 
 	// 칼로리 얻어서 라벨에 뿌리기
-	public void getCal(JLabel lbl) {
+	public String getCal() {
 		// db에서 값 받아오기
-		float cur_cal = 0;
-		float use_cal = 0;
 		float result = 0;
 		DBConnect dao = new DBConnect();
 		String sql;
-		sql = "Select Day_Cal, Use_Cal from report where User_ID = '" + user_id + "' and Date = " + today + ";";
+		sql = "Select Day_Use_Cal from report where User_ID = '" + user_id + "' and Report_Date = " + today + " LIMIT 0, 1;";
 		ResultSet rs = dao.getInfo(sql);
 
 		try {
 			while (rs.next()) {
-				cur_cal = rs.getFloat("Day_Cal");
-				use_cal = rs.getFloat("Use_Cal");
-				result = cur_cal - use_cal;
+				result = rs.getFloat("Day_Use_Cal");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		lbl.setText(result + "");
-		// 받아온값 라벨로 리턴
+		return String.valueOf(result);
 	}
 
 	// 권장칼로리 얻어서 라벨에 뿌리기
-	public void getCal2(JLabel lbl) {
+	public String getCal2() {
 		// 유저정보를 db에서 불러와서 권장칼로리 계산하기
 		// 하루 권장 칼로리 = <표준체중>(자신의키 - 100)*0.9 * 활동지수
 		// 활동지수 = HIGH : 60 MID : 40 LOW:20
 		DBConnect dao = new DBConnect();
 		String sql;
-		Float height;
-		int active = 0;
 		float result = 0;
-		sql = "Select * from user_personal where User_ID = '" + user_id + "';";
+		sql = "Select Day_Recommend_Cal from user_personal where User_ID = '" + user_id + "';";
 		// 회원번호별 유저정보 조회
 
 		ResultSet rs = dao.getInfo(sql);
 
 		try {
 			while (rs.next()) {
-				height = rs.getFloat("User_Height");
-				active = rs.getInt("Use_Act_Index");
-				result = (float) ((height - 100) * 0.9 * active);
-				// 하루 권장 칼로리 계산
-				System.out.println("height: " + height + "active: " + active);
+				result = rs.getFloat("Day_Recommend_Cal");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		lbl.setText(Float.toString(result));
-		// 라벨에 뿌리기
+		return String.valueOf(result);
 	}
 
 	public void calTrafficLight(Component component[], LocalDate changedDate) {

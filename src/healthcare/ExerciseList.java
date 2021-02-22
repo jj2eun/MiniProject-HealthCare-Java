@@ -350,7 +350,7 @@ public class ExerciseList {
 					}
 				}
 
-				db.exer_report(user_id, choice_date, fieldTC.getText());
+				db.exercise_report(user_id, choice_date, fieldTC.getText());
 
 				JOptionPane.showMessageDialog(null, "운동데이터를 저장했습니다");
 
