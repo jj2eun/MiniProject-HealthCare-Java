@@ -26,6 +26,19 @@ public class DBConnect {
 	} // 정보 조회
 
 	// =================== 로그인 DB Connect ==============================
+	public void updateInfo(String query) {
+		Connection conn = null;
+		
+		String sql;
+		conn = getConnection();
+		sql = query;
+		try {
+			conn.createStatement().executeQuery(sql);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
 	public static int login(String User_ID, String User_Password) {
 
 		int success = 0;
