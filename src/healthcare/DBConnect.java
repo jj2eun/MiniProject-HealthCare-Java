@@ -1,10 +1,54 @@
 package healthcare;
-//z
+
 import java.sql.*;
 
 import javax.swing.JOptionPane;
 
 public class DBConnect {
+
+	public static void report(String user_id, String report_date, String user_day_weight, String day_Cal, String day_c,
+			String day_p, String day_f, String day_use_cal) {
+		try {
+			Connection conn = getConnection();
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO report"
+					+ "(User_ID, Report_Date, User_Day_Weight, Day_Cal, Day_C, Day_P, Day_F, Day_Use_Cal)" + "VALUE"
+					+ "('" + user_id + "','" + report_date + "','" + user_day_weight + "','" + day_Cal + "','" + day_c
+					+ "','" + day_p + "','" + day_f + "','" + day_use_cal + "')");
+
+			stmt.executeUpdate();
+
+			System.out.println("The data has been saved! 2");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void delete(String choice_date, String user_id) {
+		try {
+			Connection conn = getConnection();
+			PreparedStatement stmt = conn.prepareStatement("DELETE FROM user_eat" + " WHERE Eat_Date =" + "'"
+					+ choice_date + "' " + "  AND User_ID =" + "'" + user_id + "'");
+
+			stmt.executeUpdate();
+			System.out.println("The data has been deleted");
+		} catch (SQLException ee) {
+			System.out.println(ee.getMessage());
+		}
+
+	}
+
+	public void updateInfo(String query) {
+		Connection conn = null;
+
+		String sql;
+		conn = getConnection();
+		sql = query;
+		try {
+			conn.createStatement().executeQuery(sql);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
 
 	public ResultSet getInfo(String query) {
 		Connection conn = null;
@@ -26,19 +70,6 @@ public class DBConnect {
 	} // 정보 조회
 
 	// =================== 로그인 DB Connect ==============================
-	public void updateInfo(String query) {
-		Connection conn = null;
-		
-		String sql;
-		conn = getConnection();
-		sql = query;
-		try {
-			conn.createStatement().executeQuery(sql);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
 	public static int login(String User_ID, String User_Password) {
 
 		int success = 0;
@@ -66,13 +97,13 @@ public class DBConnect {
 	} // 로그인 정보 저장
 
 	public static void createJoin(String User_ID, String User_Password, String User_Name, String User_Gender,
-			String User_Height, String User_Weight, String Use_Act_Index) {
+			String User_Height, String User_Weight, String Use_Act_Index, String Day_Recommend_Cal) {
 		try {
 			Connection conn = getConnection();
 			PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_personal"
-					+ "(User_ID, User_Password, User_Name,User_Gender,User_Height,User_Weight,Use_Act_Index)" + "VALUE"
-					+ "('" + User_ID + "','" + User_Password + "','" + User_Name + "','" + User_Gender + "','"
-					+ User_Height + "','" + User_Weight + "','" + Use_Act_Index + "')");
+					+ "(User_ID, User_Password, User_Name,User_Gender,User_Height,User_Weight,Use_Act_Index,Day_Recommend_Cal)"
+					+ "VALUE" + "('" + User_ID + "','" + User_Password + "','" + User_Name + "','" + User_Gender + "','"
+					+ User_Height + "','" + User_Weight + "','" + Use_Act_Index + "','" + Day_Recommend_Cal + "')");
 			stmt.executeUpdate();
 			System.out.println("The data has been saved!");
 		} catch (Exception e) {
@@ -80,7 +111,7 @@ public class DBConnect {
 		}
 	} // 회원가입 정보 저장
 
-	public static void idCheck(String User_ID) {
+	public static boolean idCheck(String User_ID) {
 
 		try {
 
@@ -91,34 +122,36 @@ public class DBConnect {
 
 			if (rs.next()) {
 				JOptionPane.showMessageDialog(null, "중복입니다.");
+				return true;
 			} else {
 				JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
+				return false;
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 
 	} // ID 중복체크
-	
-	public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,String choice_cal,
-	         String choice_food_count) {
-	      try {
-	         Connection conn = getConnection();
-	         PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_eat"
-	               + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_cal,Food_Count)" + "VALUE" + "('" + user_id + "','"
-	               + choice_date + "','" + choice_time + "','" + choice_food + "','"+ choice_cal + "','" + choice_food_count + "')");
-	         
-	         
-	         stmt.executeUpdate();
-	         
-	         
-	         System.out.println("The data has been saved! 1");
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
 
-	   }// 음식데이터 저장
+	public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,
+			String choice_cal, String choice_food_count) {
+		try {
+			Connection conn = getConnection();
+			PreparedStatement stmt = conn.prepareStatement(
+					"INSERT INTO user_eat" + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_cal,Food_Count)" + "VALUE"
+							+ "('" + user_id + "','" + choice_date + "','" + choice_time + "','" + choice_food + "','"
+							+ choice_cal + "','" + choice_food_count + "')");
+
+			stmt.executeUpdate();
+
+			System.out.println("The data has been saved! 1");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}// 음식데이터 저장
 
 	public static Connection getConnection() {
 
@@ -168,23 +201,4 @@ public class DBConnect {
 
 	}
 
-	public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,
-	         String choice_food_count) {
-	      try {
-	         Connection conn = getConnection();
-	         PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_eat"
-	               + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_Count)" + "VALUE" + "('" + user_id + "','"
-	               + choice_date + "','" + choice_time + "','" + choice_food + "','" + choice_food_count + "')");
-	         
-	         
-	         stmt.executeUpdate();
-	         
-	         
-	         System.out.println("The data has been saved! 1");
-	      } catch (Exception e) {
-	         e.printStackTrace();
-	      }
-
-	   }// 음식데이 저장 :아침
-	  
 }

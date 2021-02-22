@@ -1,4 +1,5 @@
 package healthcare;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -13,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-//z
+
 public class Health_Login extends JFrame {
 	DBConnect DBConnect = new DBConnect();
 
@@ -24,7 +25,6 @@ public class Health_Login extends JFrame {
 	private JButton exitBtn;
 	private JPasswordField loginPWD;
 
-	
 	// 프레임 생성
 	public Health_Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,8 +126,7 @@ public class Health_Login extends JFrame {
 					Main main = new Main(User_ID);
 					dispose();
 					main.frame.setVisible(true);
-				}
-				else {
+				} else {
 					JOptionPane.showMessageDialog(null, "로그인 실패");
 				}
 			}

@@ -1,8 +1,6 @@
 package healthcare;
-//z
-import java.awt.BorderLayout;
+
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +23,6 @@ public class Health_Join extends JFrame {
 
 	static final String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
 	static final String DB_URL = "jdbc:mariadb://192.168.0.41:3306/project1";
-
 	static final String USER = "project1";
 	static final String PASS = "kitri1950!@";
 
@@ -39,6 +36,7 @@ public class Health_Join extends JFrame {
 	private JButton joinCompleteBtn;
 	private JButton undoBtn;
 	private JButton dcBtn;
+	private boolean idcheck = true; // id중복체크 변수 (true이면 중복체크를 누르지 않음)
 
 	// 에플리케이션 런치
 	public static void main(String[] args) {
@@ -64,6 +62,8 @@ public class Health_Join extends JFrame {
 		Join_panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(Join_panel);
 		Join_panel.setLayout(null);
+
+		/* ======================= 라벨 ================================ */
 
 		// 회원가입 라벨,폰트설정
 		lblJoin = new JLabel("회원가입");
@@ -115,6 +115,8 @@ public class Health_Join extends JFrame {
 		Genlabel.setBounds(39, 403, 29, 20);
 		Join_panel.add(Genlabel);
 
+		/* ======================= 텍스트필드 ================================ */
+
 		// 아이디 텍스트필드
 		id = new JTextField();
 		id.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
@@ -150,6 +152,8 @@ public class Health_Join extends JFrame {
 		weight.setBounds(100, 304, 160, 32);
 		Join_panel.add(weight);
 
+		/* ======================= 버튼 ================================ */
+
 		// 회원가입 버튼
 		joinCompleteBtn = new JButton("회원가입");
 		joinCompleteBtn.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
@@ -172,6 +176,8 @@ public class Health_Join extends JFrame {
 		dcBtn.setForeground(Color.DARK_GRAY);
 		dcBtn.setBounds(276, 85, 64, 52);
 		Join_panel.add(dcBtn);
+
+		/* ======================= 라디오박스, 버튼 ================================ */
 
 		// 활동지수 라디오박스
 		JRadioButton highBtn = new JRadioButton("High");
@@ -216,8 +222,11 @@ public class Health_Join extends JFrame {
 
 		setVisible(true);
 
+		/* ======================= 액션리스너 ================================ */
+
 		// 회원가입 액션
 		joinCompleteBtn.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -227,6 +236,7 @@ public class Health_Join extends JFrame {
 				String User_Height = height.getText();
 				String User_Weight = weight.getText();
 
+				// 활동지수
 				String Use_Act_Index = null;
 				if (highBtn.isSelected()) {
 					Use_Act_Index = "60";
@@ -238,6 +248,14 @@ public class Health_Join extends JFrame {
 					Use_Act_Index = "20";
 				}
 
+				// user_personal에 권장칼로리 저장
+				// float height = Float.parseFloat(User_Height);
+				// int active = Integer.getInteger(Use_Act_Index);
+				// Float result = (float) ((height - 100) * 0.9 * active);
+				// String Day_Recommend_Cal = Float.toString(result);
+				// System.out.println("권장칼로리" +result);
+
+				// 성별
 				String User_Gender = null;
 				if (menBtn.isSelected()) {
 					User_Gender = "M";
@@ -246,6 +264,7 @@ public class Health_Join extends JFrame {
 					User_Gender = "W";
 				}
 
+				// 회원가입 시 예외처리
 				if (User_ID.trim().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "아이디를 입력해주세요");
 				} else if (User_Password.trim().isEmpty()) {
@@ -260,10 +279,20 @@ public class Health_Join extends JFrame {
 					JOptionPane.showMessageDialog(null, "활동지수를 선택해주세요");
 				} else if (User_Gender == null) {
 					JOptionPane.showMessageDialog(null, "성별을 선택해주세요");
+				} else if (idcheck) {
+					JOptionPane.showMessageDialog(null, "중복확인을 해주세요");
 				} else {
+					float height = Float.parseFloat(User_Height);
+					float active = Float.parseFloat(Use_Act_Index);
+					Float result = (float) ((height - 100) * 0.9 * active);
+					String Day_Recommend_Cal = Float.toString(result);
+					System.out.println("권장칼로리" + result);
+
 					healthcare.DBConnect.createJoin(User_ID, User_Password, User_Name, User_Gender, User_Height,
-							User_Weight, Use_Act_Index);
+							User_Weight, Use_Act_Index, Day_Recommend_Cal);
+
 					JOptionPane.showMessageDialog(null, "회원가입이 완료되었습니다");
+
 					new Health_Login();
 					dispose();
 
@@ -293,7 +322,8 @@ public class Health_Join extends JFrame {
 
 				} else {
 
-					healthcare.DBConnect.idCheck(User_ID);
+					idcheck = healthcare.DBConnect.idCheck(User_ID);
+
 				}
 			}
 
