@@ -125,7 +125,7 @@ public class Main {
 
 		/* ===================== ¶óº§ =================== */
 		JLabel lblCal1 = new JLabel(getCal());
-		lblCal1.setBounds(248, 111, 138, 50);
+		lblCal1.setBounds(156, 111, 230, 50);
 		lblCal1.setFont(new Font("¸¼Àº °íµñ", Font.PLAIN, 50));
 		contentPane.add(lblCal1);
 //		 getCal(lblCal1);
@@ -157,7 +157,7 @@ public class Main {
 		float result = 0;
 		DBConnect dao = new DBConnect();
 		String sql;
-		sql = "Select ifnull(Day_Use_Cal,0), ifnull(Day_Cal,0) from report where User_ID = 'admin' and Report_Date = '2021-02-23' LIMIT 0, 1;";
+		sql = "Select ifnull(Day_Use_Cal,0), ifnull(Day_Cal,0) from report where User_ID = '" + user_id +"' and Report_Date = '" + today  + "' LIMIT 0, 1;";
 		ResultSet rs = dao.getInfo(sql);
 
 		try {
@@ -165,6 +165,7 @@ public class Main {
 				day_use_cal = rs.getFloat("ifnull(Day_Use_Cal,0)");
 				day_eat_cal = rs.getFloat("ifnull(Day_Cal,0)");
 				result = day_eat_cal - day_use_cal;
+				System.out.println(result + "=" +day_use_cal + "-" + day_eat_cal );
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
