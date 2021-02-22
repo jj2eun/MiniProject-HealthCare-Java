@@ -115,4 +115,23 @@ public class DBConnect {
 	}
 	// Close Connection
 
+	public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,
+	         String choice_food_count) {
+	      try {
+	         Connection conn = getConnection();
+	         PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_eat"
+	               + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_Count)" + "VALUE" + "('" + user_id + "','"
+	               + choice_date + "','" + choice_time + "','" + choice_food + "','" + choice_food_count + "')");
+	         
+	         
+	         stmt.executeUpdate();
+	         
+	         
+	         System.out.println("The data has been saved! 1");
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+
+	   }// 음식데이 저장 :아침
+	  
 }

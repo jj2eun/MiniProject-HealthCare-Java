@@ -8,12 +8,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -41,12 +45,9 @@ public class FoodList {
 		DefaultTableModel lunchmodel;
 		DefaultTableModel dinnermodel;
 		DefaultTableModel dessertmodel;
-		String str[] = {"Food_no","Food_Name","Food_Cal"};
-		String str2[]={"Food_Name","Food_Cal"};
-//		String morningstr[]={"Food_Name","Food_Cal"};
-//		String lunchstr[]={"Food_Name","Food_Cal"};
-//		String dinnerstr[]={"Food_Name","Food_Cal"};
-//		String dessertstr[]={"Food_Name","Food_Cal"};
+		String str[] = {"번호","음식","칼로리"};
+		String str2[]={"번호","음식","칼로리","수량"};
+
 	 /**
 		 * @wbp.parser.constructor
 		 */
@@ -91,15 +92,15 @@ public class FoodList {
 		contentPane.setBounds(0,0,794,561);
 		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(null);
 		contentPane.setVisible(true);
+		contentPane.setLayout(null);
 		
 	
 		//==============================Choice==============================
 		
 		
 		Choice choiceDate = new Choice();
-		choiceDate.setBounds(135, 83, 264, 21);
+		choiceDate.setBounds(135, 83, 211, 20);
 		contentPane.add(choiceDate);
 	
 		for (int i = 2021 ; i < 2023 ; i++) {
@@ -117,7 +118,7 @@ public class FoodList {
 		
 		
 		Choice choiceTime = new Choice();
-		choiceTime.setBounds(135, 110, 264, 21);
+		choiceTime.setBounds(135, 110, 211, 20);
 		contentPane.add(choiceTime);
 		
 		choiceTime.add("아침");
@@ -176,10 +177,6 @@ public class FoodList {
 		});
 		
 		
-		JButton btnSearch = new JButton("검색");
-		btnSearch.setBounds(706, 10, 66, 40);
-		contentPane.add(btnSearch);
-		
 		JButton btnPlus = new JButton("+");
 		btnPlus.setBounds(135, 511, 80, 40);
 		btnPlus.setFont(new Font("굴림", Font.BOLD, 20));
@@ -215,9 +212,6 @@ public class FoodList {
 		contentPane.add(fieldTC);
 		fieldTC.setColumns(10);
 		
-	
-		
-		
 		
 		
 		
@@ -248,37 +242,44 @@ public class FoodList {
 		JTable dinnerTable = new JTable(dinnermodel);
 		JTable dessertTable = new JTable(dessertmodel);
 		
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			if(e.getSource()==fieldSearch.text())
-//		}
-//		
-//		
+		 // Food_Code 컬럼 숨기기
+        table.setModel(model);
+        table.removeColumn(table.getColumnModel().getColumn(0));
+        
+//        morningTable.setModel(morningmodel);
+//        morningTable.removeColumn(morningTable.getColumnModel().getColumn(0));
+//        
+//        lunchTable.setModel(lunchmodel);
+//        lunchTable.removeColumn(lunchTable.getColumnModel().getColumn(0));
+//        
+//        dinnerTable.setModel(dinnermodel);
+//        dinnerTable.removeColumn(dinnerTable.getColumnModel().getColumn(0));
+//        
+//        dessertTable.setModel(dessertmodel);
+//        dessertTable.removeColumn(dessertTable.getColumnModel().getColumn(0));
+
 		JScrollPane js = new JScrollPane(table);
-		js.setLocation(12,136);
-		js.setSize(383, 365);
+		js.setBounds(12, 136, 383, 365);
 		contentPane.add(js);
 		
 		JScrollPane morningjs = new JScrollPane(morningTable);
-		morningjs.setLocation(463,83);
-		morningjs.setSize(317,95);
+		morningjs.setBounds(463, 83, 317, 95);
 		contentPane.add(morningjs);
 		
 		JScrollPane lunchjs = new JScrollPane(lunchTable);
-		lunchjs.setLocation(463,188);
-		lunchjs.setSize(317,95);
+		lunchjs.setBounds(463, 188, 317, 95);
 		contentPane.add(lunchjs);
 		
 		JScrollPane dinnerjs = new JScrollPane(dinnerTable);
-		dinnerjs.setLocation(463,293);
-		dinnerjs.setSize(317,95);
+		dinnerjs.setBounds(463, 293, 317, 95);
 		contentPane.add(dinnerjs);
 		
 		JScrollPane dessertjs = new JScrollPane(dessertTable);
-		dessertjs.setLocation(463,398);
-		dessertjs.setSize(317,95);
+		dessertjs.setBounds(463, 398, 317, 95);
 		contentPane.add(dessertjs);
 		
+		
+		//+버튼 동작
 		btnPlus.addActionListener(new ActionListener() {
 	         @Override
 	         public void actionPerformed(ActionEvent e) {
@@ -286,30 +287,106 @@ public class FoodList {
 	                  + choiceTime.getItem(choiceTime.getSelectedIndex());
 
 	            int row = table.getSelectedRow();
+	            if (row == -1) {
+	                JOptionPane.showMessageDialog(null, "음식을 선택해주세요");
+	             }
+	             // 수량 입력안할시 에러메시지
+	             else if (fieldCount.getText().trim().isEmpty()) {
+	                JOptionPane.showMessageDialog(null, "수량을 입력해주세요");
+	             } else {
+	                Object sdb[] = { table.getModel().getValueAt(row, 0), 
+	                		table.getModel().getValueAt(row, 1),
+	                		table.getModel().getValueAt(row, 2),
+	                      fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량 ->
+	                // sdb[]에 담기
+
+	                if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
+	                    sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                    morningmodel.addRow(sdb);
+//	                    System.out.println("cal= " + sdb[2]);
+	                 } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "점심") {
+	                    sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                    lunchmodel.addRow(sdb);
+//	                    System.out.println("cal= " + sdb[2]);
+	                 } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "저녁") {
+	                    sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                    dinnermodel.addRow(sdb);
+//	                    System.out.println("cal= " + sdb[2]);
+	                 } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "간식") {
+	                    sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                    dessertmodel.addRow(sdb);
+//	                    System.out.println("cal= " + sdb[2]);
+
+	                 }
+	              }
+
+	           }
+	        });
+
+		
+		// -버튼 동작
+		
+		btnMinus.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int mdel = morningTable.getSelectedRow();
+	            int ldel = lunchTable.getSelectedRow();
+	            int ddel = dinnerTable.getSelectedRow();
+	            int dsdel = dessertTable.getSelectedRow();
+
+	            if (mdel != -1 ) {
+	               morningmodel.removeRow(mdel);
+	            } 
+	            if (ldel != -1) {
+	               lunchmodel.removeRow(ldel);
+	            } 
+	            if (ddel != -1) {
+	               dinnermodel.removeRow(ddel);
+	            }
+	            if (dsdel != -1)
+	               dessertmodel.removeRow(dsdel);
+     
+		         }
+			});
+	
+		//save버튼 동작
+		 btnSave.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+//	               System.out.println(e.getActionCommand());
+	            String choice_date = choiceDate.getItem(choiceDate.getSelectedIndex()); // 선택된 날짜
+	            System.out.println(choice_date);
+	            String choice_time = choiceTime.getItem(choiceTime.getSelectedIndex()); // 선택된 시간대(아점저간)
 	            
-	               
-	               
-	               Object sdb[] = {
-	            		   
-	            		   table.getModel().getValueAt(row, 1),
-	            		   table.getModel().getValueAt(row, 2),
-	            		   
-	               };  
-	               if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
-	            	   morningmodel.addRow(sdb);
-	               } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "점심") {
-	            	   lunchmodel.addRow(sdb);
-	               } else if( choiceTime.getItem(choiceTime.getSelectedIndex()) == "저녁") {
-	            	   dinnermodel.addRow(sdb);
-	               } else if(choiceTime.getItem(choiceTime.getSelectedIndex()) == "간식") {
-	            	   dessertmodel.addRow(sdb);
+	            // 저장 버튼을 누르면 시간대별로 코드,수량만 저장하기
+	            // db를 전부 지워 -> rowcount==0이면 저장안하고 rowcount >= 1이면 db에 저장
+	            // DB지우는 함수 필요
+	            if(morningmodel.getRowCount() > 0) { // 테이블에 값이 있으면, DB에 저장
+	               for(int i = 0; i < morningmodel.getRowCount(); i++) {
+	                  db.user_eat(user_id, choice_date, "아침", morningmodel.getValueAt(i, 0).toString(), morningmodel.getValueAt(i, 3).toString());
 	               }
-	               
-	            
+	            }
+	            if(lunchmodel.getRowCount() > 0) {
+	               for(int i = 0; i < lunchmodel.getRowCount(); i++) {
+	                  db.user_eat(user_id, choice_date, "점심", lunchmodel.getValueAt(i, 0).toString(), lunchmodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	            if(dinnermodel.getRowCount() > 0) {
+	               for(int i = 0; i < dinnerTable.getRowCount(); i++) {
+	                  db.user_eat(user_id, choice_date, "저녁", dinnermodel.getValueAt(i, 0).toString(), dinnermodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	            if(dessertmodel.getRowCount() > 0) {
+	               for(int i = 0; i < dessertmodel.getRowCount(); i++) {
+	                  db.user_eat(user_id, choice_date, "간식", dessertmodel.getValueAt(i, 0).toString(), dessertmodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	           JOptionPane.showMessageDialog(null, "음식데이터를 저장했습니다");
 	            
 	         }
-		});
+	      });
 		
+		//검색으로 테이블 조회
 		fieldSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				String val = fieldSearch.getText();//fieldsearch에서 텍스트가져오기
@@ -319,45 +396,27 @@ public class FoodList {
 			
 			}
 		});
-//		
-//		table.addMouseListener(new MouseListener() {
-//			
-//			@Override
-//			public void mouseReleased(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void mousePressed(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void mouseExited(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				int row = table.getSelectedRow();
-//				int col = table.getSelectedColumn();
-//				for(int i = 0 ; i<table.getColumnCount(); i++) {
-//					System.out.print(table.getModel().getValueAt(row, i)+"\t");
-//				}
-//				
-//			}
-//		});
-	            //}
-//		
+		
+		//총 칼로리 표시
+//		 Object sdb[] = { table.getModel().getValueAt(row, 0), 
+//         		table.getModel().getValueAt(row, 1),
+//         		table.getModel().getValueAt(row, 2),
+//               fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량 ->
+//         // sdb[]에 담기
+//
+//         if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
+//             sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+//             morningmodel.addRow(sdb);
+//             System.out.println("cal= " + sdb[2]);
+		for(int row = 0 ; row<morningmodel.getRowCount() ; row++) {
+		Object sdb[] = {morningmodel.getValueAt(row, 2)};
+		
+		}
+		
+		
+		
+		
+//		String str_total = Float.toString(total);
 		
 		//==============================Label==============================
 		JLabel lblTC = new JLabel("총 칼로리");
@@ -367,43 +426,55 @@ public class FoodList {
 		contentPane.add(lblTC);
 		
 		JLabel lblMorning = new JLabel("아침");
+		lblMorning.setBounds(405, 83, 57, 95);
 		lblMorning.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMorning.setFont(new Font("굴림", Font.BOLD, 20));
-		lblMorning.setBounds(405, 83, 57, 95);
 		contentPane.add(lblMorning);
 		
 		JLabel lblLunch = new JLabel("점심");
+		lblLunch.setBounds(405, 188, 57, 95);
 		lblLunch.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLunch.setFont(new Font("굴림", Font.BOLD, 20));
-		lblLunch.setBounds(405, 188, 57, 95);
 		contentPane.add(lblLunch);
 		
 		JLabel lblDinner = new JLabel("저녁");
+		lblDinner.setBounds(402, 293, 57, 95);
 		lblDinner.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDinner.setFont(new Font("굴림", Font.BOLD, 20));
-		lblDinner.setBounds(402, 293, 57, 95);
 		contentPane.add(lblDinner);
 		
 		JLabel lblDessert = new JLabel("간식");
+		lblDessert.setBounds(402, 398, 57, 95);
 		lblDessert.setHorizontalAlignment(SwingConstants.CENTER);
 		lblDessert.setFont(new Font("굴림", Font.BOLD, 20));
-		lblDessert.setBounds(402, 398, 57, 95);
 		contentPane.add(lblDessert);
 		
 		JLabel lblCount = new JLabel("수량");
+		lblCount.setBounds(12, 511, 46, 40);
 		lblCount.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCount.setFont(new Font("굴림", Font.BOLD, 16));
-		lblCount.setBounds(12, 511, 46, 40);
 		contentPane.add(lblCount);
 		
 		JLabel lblChoiceDate = new JLabel("날짜 선택");
-		lblChoiceDate.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChoiceDate.setBounds(12, 83, 121, 21);
+		lblChoiceDate.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblChoiceDate);
 		
 		JLabel lblChoiceTime = new JLabel("시간 선택");
-		lblChoiceTime.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChoiceTime.setBounds(12, 110, 121, 21);
+		lblChoiceTime.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblChoiceTime);
+		
+		JButton btnTC = new JButton("총 칼로리 계산");
+		btnTC.setBounds(421, 549, 91, 23);
+		frame.getContentPane().add(btnTC);
+		
+		btnTC.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
 	}
 }
