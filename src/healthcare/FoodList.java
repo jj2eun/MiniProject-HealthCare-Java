@@ -5,16 +5,20 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -44,6 +48,7 @@ public class FoodList {
 	DefaultTableModel dessertmodel;
 	String str[] = { "Food_no", "Food_Name", "Food_Cal" };
 	String str2[] = { "Food_Name", "Food_Cal" };
+	String str3[] = { "음식", "칼로리", "수량" };
 
 	/**
 	 * @wbp.parser.constructor
@@ -104,7 +109,8 @@ public class FoodList {
 
 				for (int k = 1; k <= maxDay; k++) {
 
-					choiceDate.add(String.valueOf(i + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + k));
+					choiceDate.add(String.valueOf(i + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + k));
+					System.out.println("캘린더는 = "+ cal.get(Calendar.MONTH) + 1);
 				}
 
 			}
@@ -226,31 +232,13 @@ public class FoodList {
 
 		JTable table = new JTable(model);
 
-//		// 마우스클릭 이벤트
-//		table.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//
-//				int row = table.getSelectedRow();
-//				for (int i = 0; i < table.getColumnCount(); i++) {
-//				System.out.print(table.getModel().getValueAt(row, i) + " ");
-//
-//				}
-//			}
-//		});
+
 
 		JTable morningTable = new JTable(morningmodel);
 		JTable lunchTable = new JTable(lunchmodel);
 		JTable dinnerTable = new JTable(dinnermodel);
 		JTable dessertTable = new JTable(dessertmodel);
-//		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			if(e.getSource()==fieldSearch.text())
-//		}
-//		
-//		
+		
 		JScrollPane js = new JScrollPane(table);
 
 		js.setLocation(12, 136);
@@ -286,6 +274,9 @@ public class FoodList {
 
 			}
 		});
+		
+
+	      
 
 		// ==============================Label==============================
 		JLabel lblTC = new JLabel("총 칼로리");
@@ -333,25 +324,193 @@ public class FoodList {
 		lblChoiceTime.setHorizontalAlignment(SwingConstants.CENTER);
 		lblChoiceTime.setBounds(12, 110, 121, 21);
 		contentPane.add(lblChoiceTime);
-		
+
 		// ==============================버튼액션==============================
 		// 플러스버튼 액션
 		btnPlus.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String data = "선택날짜: " + choiceDate.getItem(choiceDate.getSelectedIndex()) + " 타임선택값: "
-						+ choiceTime.getItem(choiceTime.getSelectedIndex());
-				
-				int row = table.getSelectedRow();
-				for (int i = 0; i < table.getColumnCount(); i++) {
-					System.out.print(table.getModel().getValueAt(row, i) + " ");
-				}
-				
-				System.out.println(data);
-				System.out.println("추가");
-				
-			}
-		});
+	         @Override
+	         public void actionPerformed(ActionEvent e) {
+
+	            int row = table.getSelectedRow();
+
+	            if (row == -1) {
+	               JOptionPane.showMessageDialog(null, "음식을 선택해주세요");
+	            }
+	            // 수량 입력안할시 에러메시지
+	            else if (fieldCount.getText().trim().isEmpty()) {
+	               JOptionPane.showMessageDialog(null, "수량을 입력해주세요");
+	            }
+	            // 아침,점심,저녁,간식 테이블에 선택한 음식과 수량데이터 넣기
+	            else {
+	               Object sdb[] = { table.getModel().getValueAt(row, 0), table.getModel().getValueAt(row, 1),
+	                     table.getModel().getValueAt(row, 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
+	                                                                     // ->
+	               System.out.println("sdb= " + sdb[1]);
+
+	               // sdb[]에 담기
+	               if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
+	                  sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                  morningmodel.addRow(sdb);
+	                  System.out.println("cal= " + sdb[2]);
+	               } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "점심") {
+	                  sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                  lunchmodel.addRow(sdb);
+	                  System.out.println("cal= " + sdb[2]);
+	               } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "저녁") {
+	                  sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                  dinnermodel.addRow(sdb);
+	                  System.out.println("cal= " + sdb[2]);
+	               } else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "간식") {
+	                  sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
+	                  dessertmodel.addRow(sdb);
+	                  System.out.println("cal= " + sdb[2]);
+
+	               }
+	            }
+
+	         }
+	      });
+		 // 마이너스버튼 액션
+	      btnMinus.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+
+	            int mdel = morningTable.getSelectedRow();
+	            int ldel = lunchTable.getSelectedRow();
+	            int ddel = dinnerTable.getSelectedRow();
+	            int dsdel = dessertTable.getSelectedRow();
+
+	            if (mdel != -1) {
+	               morningmodel.removeRow(mdel);
+	            }
+	            if (ldel != -1) {
+	               lunchmodel.removeRow(ldel);
+	            }
+	            if (ddel != -1) {
+	               dinnermodel.removeRow(ddel);
+	            }
+	            if (dsdel != -1)
+	               dessertmodel.removeRow(dsdel);
+	         }
+	      });
+	   // OK버튼 액션
+	      btnSave.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	            String choice_date = choiceDate.getItem(choiceDate.getSelectedIndex()); // 선택된 날짜
+	            System.out.println(choice_date);
+	            String choice_time = choiceTime.getItem(choiceTime.getSelectedIndex()); // 선택된 시간대(아점저간)
+
+	            // 저장 버튼을 누르면 시간대별로 코드,수량만 저장하기
+	            // db를 전부 지워 -> rowcount==0이면 저장안하고 rowcount >= 1이면 db에 저장
+	            // DB지우는 함수 필요
+	            if (morningmodel.getRowCount() > 0) { // 테이블에 값이 있으면, DB에 저장
+	               for (int i = 0; i < morningmodel.getRowCount(); i++) {
+	                  DBConnect.user_eat(user_id, choice_date, "아침", morningmodel.getValueAt(i, 0).toString(),morningmodel.getValueAt(i, 2).toString(),
+	                        morningmodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	            if (lunchmodel.getRowCount() > 0) {
+	               for (int i = 0; i < lunchmodel.getRowCount(); i++) {
+	                  DBConnect.user_eat(user_id, choice_date, "점심", lunchmodel.getValueAt(i, 0).toString(),lunchmodel.getValueAt(i, 2).toString(),
+	                        lunchmodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	            if (dinnermodel.getRowCount() > 0) {
+	               for (int i = 0; i < dinnerTable.getRowCount(); i++) {
+	                  DBConnect.user_eat(user_id, choice_date, "저녁", dinnermodel.getValueAt(i, 0).toString(),dinnermodel.getValueAt(i, 2).toString(),
+	                        dinnermodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	            if (dessertmodel.getRowCount() > 0) {
+	               for (int i = 0; i < dessertmodel.getRowCount(); i++) {
+	                  DBConnect.user_eat(user_id, choice_date, "간식", dessertmodel.getValueAt(i, 0).toString(),dessertmodel.getValueAt(i, 2).toString(),
+	                        dessertmodel.getValueAt(i, 3).toString());
+	               }
+	            }
+	            JOptionPane.showMessageDialog(null, "음식데이터를 저장했습니다");
+
+	         }
+	      });
+	   // 날짜 클릭시 DB에 데이터 가져와서 아점저간 테이블에 뿌리기
+	      choiceDate.addItemListener(new ItemListener() {
+	         public void itemStateChanged(ItemEvent e) {
+	            System.out.println(e.getItem());
+	            String date = e.getItem().toString();
+//	            String Eat_date = "2021-01-01";
+	            
+	            System.out.println("선택한날짜="+date);
+	                        
+	            morningmodel = new DefaultTableModel(ob2, str3);
+	            lunchmodel = new DefaultTableModel(ob2, str3);
+	            dinnermodel = new DefaultTableModel(ob2, str3);
+	            dessertmodel = new DefaultTableModel(ob2, str3);
+	            
+	            
+	            
+	            try {
+	                              
+	               
+	               ResultSet rs_morning = db.getInfo("select nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where Eat_Time='아침' and Eat_date=" + "'" + date + "'");
+	               ResultSet rs_lunch = db.getInfo("select nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where Eat_Time='점심' and Eat_date=" + "'" + date + "'");
+	               ResultSet rs_dinner = db.getInfo("select nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where Eat_Time='저녁' and Eat_date=" + "'" + date + "'");
+	               ResultSet rs_dessert = db.getInfo("select nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where Eat_Time='간식' and Eat_date=" + "'" + date + "'");
+	               
+	               while(rs_morning.next()) {
+	                  System.out.println("morning");
+	                  String Food_Name = rs_morning.getString("Food_Name");
+	                  String Food_cal = rs_morning.getString("Food_cal");
+	                  Float Food_Count = rs_morning.getFloat("Food_Count");
+	                  Object data_morning[] = { Food_Name, Food_cal, Food_Count };
+	                  morningmodel.addRow(data_morning);
+	               }
+	               while(rs_lunch.next()) {
+	                  System.out.println("lunch");
+	                  String Food_Name = rs_lunch.getString("Food_Name");
+	                  String Food_cal = rs_lunch.getString("Food_cal");
+	                  Float Food_Count = rs_lunch.getFloat("Food_Count");
+	                  Object data_lunch[] = { Food_Name, Food_cal, Food_Count };
+	                  lunchmodel.addRow(data_lunch);
+	               }
+	               while(rs_dinner.next()) {
+	                  String Food_Name = rs_dinner.getString("Food_Name");
+	                  String Food_cal = rs_dinner.getString("Food_cal");
+	                  Float Food_Count = rs_dinner.getFloat("Food_Count");
+	                  Object data_dinner[] = { Food_Name, Food_cal, Food_Count };
+	                  dinnermodel.addRow(data_dinner);
+	               }
+	               while(rs_dessert.next()) {
+	                  String Food_Name = rs_dessert.getString("Food_Name");
+	                  String Food_cal = rs_dessert.getString("Food_cal");
+	                  Float Food_Count = rs_dessert.getFloat("Food_Count");
+	                  Object data_dessert[] = { Food_Name, Food_cal, Food_Count };
+	                  dessertmodel.addRow(data_dessert);
+	               }
+	               
+
+
+	            } catch (SQLException e1) {
+	               e1.printStackTrace();
+	            }
+	            new JTable(morningmodel);
+	            new JTable(lunchmodel);
+	            new JTable(dinnermodel);
+	            new JTable(dessertmodel);
+	            
+	         }
+	      });
+
+	      String choice_date = choiceDate.getItem(choiceDate.getSelectedIndex());
+	      System.out.println(choice_date);
+	   // 수량입력
+	      fieldSearch.addKeyListener(new KeyAdapter() {
+	         public void keyReleased(KeyEvent e) {
+	            String val = fieldSearch.getText();// fieldsearch에서 텍스트가져오기
+	            TableRowSorter<TableModel> trs = new TableRowSorter<>(table.getModel());
+	            table.setRowSorter(trs); // table row정렬
+	            trs.setRowFilter(RowFilter.regexFilter(val));
+
+	         }
+	      });
+	      
 	}
 
 }

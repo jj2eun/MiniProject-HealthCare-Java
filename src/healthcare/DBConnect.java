@@ -10,11 +10,11 @@ public class DBConnect {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		
+
 		String sql;
 		conn = getConnection();
-		
-		//this.sql = "SELECT * FROM exercise limit 5";
+
+		// this.sql = "SELECT * FROM exercise limit 5";
 		sql = query;
 		try {
 			stmt = conn.createStatement();
@@ -24,8 +24,7 @@ public class DBConnect {
 		}
 		return rs;
 	} // 정보 조회
-	
-	
+
 	// =================== 로그인 DB Connect ==============================
 	public static int login(String User_ID, String User_Password) {
 
@@ -67,7 +66,7 @@ public class DBConnect {
 			System.out.println(e.getMessage());
 		}
 	} // 회원가입 정보 저장
-	
+
 	public static void idCheck(String User_ID) {
 
 		try {
@@ -89,6 +88,25 @@ public class DBConnect {
 
 	} // ID 중복체크
 	
+	public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,String choice_cal,
+	         String choice_food_count) {
+	      try {
+	         Connection conn = getConnection();
+	         PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_eat"
+	               + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_cal,Food_Count)" + "VALUE" + "('" + user_id + "','"
+	               + choice_date + "','" + choice_time + "','" + choice_food + "','"+ choice_cal + "','" + choice_food_count + "')");
+	         
+	         
+	         stmt.executeUpdate();
+	         
+	         
+	         System.out.println("The data has been saved! 1");
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+
+	   }// 음식데이터 저장
+
 	public static Connection getConnection() {
 
 		try {
@@ -109,10 +127,32 @@ public class DBConnect {
 		}
 
 	} // Get Connection
-	
+
 	public static void closeConnection() {
-		
+
+	}// Close Connection
+
+	// ======================= 운동정보 조회 ================================
+	public static void exercise(String Exercise_Name, String Exercise_Cal) {
+
+		try {
+
+			Connection conn = getConnection();
+			PreparedStatement stmt = conn.prepareStatement("select * from exercise");
+
+			ResultSet rs = stmt.executeQuery();
+
+			System.out.println(rs);
+
+			while (rs.next()) {
+				System.out.println(rs.getString("Exercise_Name") + (": ") + rs.getInt("Exercise_Cal") + ("kcal"));
+
+			}
+
+		} catch (Exception e) {
+
+		}
+
 	}
-	// Close Connection
 
 }
