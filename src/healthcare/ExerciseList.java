@@ -11,8 +11,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Calendar;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +30,9 @@ import javax.swing.table.TableRowSorter;
 
 public class ExerciseList {
 	DBConnect db = new DBConnect();
+	TableRowSorter<TableModel> tableRowSorter2; // 필터 정렬할때 출력되는 테이블의 값을 저장하는 변수
 	float totalCal = (float) 0;
+	LocalDate today = LocalDate.now();
 	JFrame frame;
 	private String user_id;
 	String selectedDate;
@@ -220,7 +222,7 @@ public class ExerciseList {
 
 		JTable table1 = new JTable(model1);
 		JTable table2 = new JTable(model2);
-
+		tableRowSorter2 = new TableRowSorter<>(table1.getModel()); // 시작할때, 기존 음식테이블 저장
 		// Exercis_no 컬럼 숨기기
 		table1.setModel(model1);
 		table1.removeColumn(table1.getColumnModel().getColumn(0));
@@ -235,40 +237,15 @@ public class ExerciseList {
 		JScrollPane js2 = new JScrollPane(table2);
 		js2.setBounds(432, 136, 317, 365);
 		contentPane.add(js2);
-
-		// 날짜 클릭시 DB에 데이터 가져와서 아점저간 테이블에 뿌리기
+		
+		fieldTC.setText(showUserExerciseList(today.toString())+"");
+		// 날짜 클릭시 DB에 데이터 가져와서 테이블에 뿌리기
 		choiceDate.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				System.out.println(e.getItem());
-				selectedDate = (String) e.getItem();
-				model2.setRowCount(0);
-				totalCal = 0;
-
-				System.out.println();
-				try {
-					ResultSet rs_exercise = db.getInfo(
-							"SELECT Ex_no, User_ID, Exercise_Date, u.Exercise_no, Exercise_Name, e.Exercise_Cal, Exercise_Time "
-									+ "FROM user_exercise u LEFT OUTER JOIN exercise e " + "USING(Exercise_no) "
-									+ "WHERE (User_ID = '" + user_id + "') AND (Exercise_Date ='" + selectedDate
-									+ "');");
-
-					while (rs_exercise.next()) {
-						String Exercise_no = rs_exercise.getString("Exercise_no");
-						String Exercise_Name = rs_exercise.getString("Exercise_Name");
-						String Exercise_Cal = rs_exercise.getString("Exercise_Cal");
-						totalCal += Float.parseFloat(Exercise_Cal);
-						Float Exercise_Time = rs_exercise.getFloat("Exercise_Time");
-						Object data_exercise[] = { Exercise_no, Exercise_Name, Exercise_Cal, Exercise_Time };
-
-						model2.addRow(data_exercise);
-
-					}
-
-					fieldTC.setText(totalCal + "");
-
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				selectedDate = (String) e.getItem(); // 선택한 날짜 얻기 
+				model2.setRowCount(0); // 오른쪽 테이블 초기화
+				fieldTC.setText(showUserExerciseList(selectedDate)+""); // 오른쪽테이블 출력 + 총칼로리 출력
 			}
 		});
 
@@ -278,10 +255,11 @@ public class ExerciseList {
 		fieldSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				String val = fieldSearch.getText();// fieldsearch에서 텍스트가져오기
-				TableRowSorter<TableModel> trs = new TableRowSorter<>(table1.getModel());
-				table1.setRowSorter(trs); // table row정렬
-				trs.setRowFilter(RowFilter.regexFilter(val));
+				TableRowSorter<TableModel> tableRowSorter = new TableRowSorter<>(table1.getModel());
+				table1.setRowSorter(tableRowSorter); // table row정렬
+				tableRowSorter.setRowFilter(RowFilter.regexFilter(val)); // 필터링하기
 
+				tableRowSorter2 = tableRowSorter;
 			}
 		});
 
@@ -298,8 +276,8 @@ public class ExerciseList {
 				else if (fieldCount.getText().trim().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "수량을 입력해주세요");
 				} else {
-					Object sdb[] = { table1.getModel().getValueAt(row, 0), table1.getModel().getValueAt(row, 1),
-							table1.getModel().getValueAt(row, 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
+					Object sdb[] = { tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 0), tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 1),
+							tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
 					// ->
 					// sdb[]에 담기
 
@@ -380,5 +358,35 @@ public class ExerciseList {
 		lblMyexer.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMyexer.setBounds(411, 60, 348, 44);
 		contentPane.add(lblMyexer);
+	}
+	public float showUserExerciseList(String date) {
+		totalCal = 0;
+
+		System.out.println();
+		try {
+			ResultSet rs_exercise = db.getInfo(
+					"SELECT Ex_no, User_ID, Exercise_Date, u.Exercise_no, Exercise_Name, e.Exercise_Cal, Exercise_Time "
+							+ "FROM user_exercise u LEFT OUTER JOIN exercise e " + "USING(Exercise_no) "
+							+ "WHERE (User_ID = '" + user_id + "') AND (Exercise_Date ='" + selectedDate
+							+ "');");
+
+			while (rs_exercise.next()) {
+				String Exercise_no = rs_exercise.getString("Exercise_no");
+				String Exercise_Name = rs_exercise.getString("Exercise_Name");
+				String Exercise_Cal = rs_exercise.getString("Exercise_Cal");
+				totalCal += Float.parseFloat(Exercise_Cal);
+				Float Exercise_Time = rs_exercise.getFloat("Exercise_Time");
+				Object data_exercise[] = { Exercise_no, Exercise_Name, Exercise_Cal, Exercise_Time };
+
+				model2.addRow(data_exercise);
+
+			}
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		return totalCal;
+		
 	}
 }

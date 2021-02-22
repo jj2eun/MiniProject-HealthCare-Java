@@ -9,15 +9,10 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.Calendar;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,12 +28,11 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-//.....ㅁㄴㅇㄹ
 public class FoodList {
 	DBConnect db = new DBConnect();
-
+	TableRowSorter<TableModel> tableRowSorter2; // 필터 정렬할때 출력되는 테이블의 값을 저장하는 변수
 	float totalCal = (float) 0;
-
+	LocalDate today = LocalDate.now();
 	JFrame frame;
 	private String user_id;
 	String selectedDate;
@@ -93,7 +87,6 @@ public class FoodList {
 		frame.getContentPane().setLayout(null);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
-
 		JPanel contentPane = new JPanel();
 		contentPane.setBounds(0, 0, 794, 561);
 		frame.getContentPane().add(contentPane);
@@ -240,35 +233,35 @@ public class FoodList {
 				return false; 
 			} 
 		};
-		
+
 		JTable morningTable = new JTable(morningmodel){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int i, int c){ 
 				return false; 
 			} 
 		};
-		
+
 		JTable lunchTable = new JTable(lunchmodel){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int i, int c){ 
 				return false; 
 			} 
 		};
-		
+
 		JTable dinnerTable = new JTable(dinnermodel){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int i, int c){ 
 				return false; 
 			} 
 		};
-		
+
 		JTable dessertTable = new JTable(dessertmodel){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int i, int c){ 
 				return false; 
 			} 
 		};
-		
+		tableRowSorter2 = new TableRowSorter<>(table.getModel()); // 시작할때, 기존 음식테이블 저장
 
 		// Food_Code 컬럼 숨기기
 		table.setModel(model);
@@ -306,74 +299,19 @@ public class FoodList {
 		dessertjs.setBounds(463, 398, 317, 95);
 		contentPane.add(dessertjs);
 
+		// 디폴트로 오늘 데이터, 총칼로리 출력
+		fieldTC.setText(showUserFoodlist(today.toString())+"");
 		// 날짜 클릭시 DB에 데이터 가져와서 아점저간 테이블에 뿌리기
 		choiceDate.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				System.out.println(e.getItem());
-				selectedDate = (String) e.getItem();
+			public void itemStateChanged(ItemEvent e) {				
+				selectedDate = (String) e.getItem(); // 바뀐 날짜
+				// 오른쪽 테이블 초기화
 				morningmodel.setRowCount(0);
 				lunchmodel.setRowCount(0);
 				dinnermodel.setRowCount(0);
 				dessertmodel.setRowCount(0);
-				totalCal = 0;
-
-				System.out.println();
-				try {
-					ResultSet rs_morning = db.getInfo(
-							"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
-									+ user_id + "' and Eat_Time='아침' and Eat_date=" + "'" + selectedDate + "'");
-					ResultSet rs_lunch = db.getInfo(
-							"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
-									+ user_id + "' and Eat_Time='점심' and Eat_date=" + "'" + selectedDate + "'");
-					ResultSet rs_dinner = db.getInfo(
-							"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
-									+ user_id + "' and Eat_Time='저녁' and Eat_date=" + "'" + selectedDate + "'");
-					ResultSet rs_dessert = db.getInfo(
-							"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
-									+ user_id + "' and Eat_Time='간식' and Eat_date=" + "'" + selectedDate + "'");
-					while (rs_morning.next()) {
-						String Food_no = rs_morning.getString("Food_no");
-						String Food_Name = rs_morning.getString("Food_Name");
-						String Food_cal = rs_morning.getString("Food_cal");
-						totalCal += Float.parseFloat(Food_cal);
-						Float Food_Count = rs_morning.getFloat("Food_Count");
-						Object data_morning[] = { Food_no, Food_Name, Food_cal, Food_Count };
-
-						morningmodel.addRow(data_morning);
-
-					}
-					while (rs_lunch.next()) {
-						String Food_no = rs_lunch.getString("Food_no");
-						String Food_Name = rs_lunch.getString("Food_Name");
-						String Food_cal = rs_lunch.getString("Food_cal");
-						totalCal += Float.parseFloat(Food_cal);
-						Float Food_Count = rs_lunch.getFloat("Food_Count");
-						Object data_lunch[] = { Food_no, Food_Name, Food_cal, Food_Count };
-						lunchmodel.addRow(data_lunch);
-					}
-					while (rs_dinner.next()) {
-						String Food_no = rs_dinner.getString("Food_no");
-						String Food_Name = rs_dinner.getString("Food_Name");
-						String Food_cal = rs_dinner.getString("Food_cal");
-						totalCal += Float.parseFloat(Food_cal);
-						Float Food_Count = rs_dinner.getFloat("Food_Count");
-						Object data_dinner[] = { Food_no, Food_Name, Food_cal, Food_Count };
-						dinnermodel.addRow(data_dinner);
-					}
-					while (rs_dessert.next()) {
-						String Food_no = rs_dessert.getString("Food_no");
-						String Food_Name = rs_dessert.getString("Food_Name");
-						String Food_cal = rs_dessert.getString("Food_cal");
-						totalCal += Float.parseFloat(Food_cal);
-						Float Food_Count = rs_dessert.getFloat("Food_Count");
-						Object data_dessert[] = { Food_no, Food_Name, Food_cal, Food_Count };
-						dessertmodel.addRow(data_dessert);
-					}
-					fieldTC.setText(totalCal + "");
-
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				// UserFoodlist 출력
+				fieldTC.setText(showUserFoodlist(selectedDate)+"");
 			}
 		});
 
@@ -384,8 +322,8 @@ public class FoodList {
 		btnPlus.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				int row = table.getSelectedRow();
+
 				if (row == -1) {
 					JOptionPane.showMessageDialog(null, "음식을 선택해주세요");
 				}
@@ -393,35 +331,29 @@ public class FoodList {
 				else if (fieldCount.getText().trim().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "수량을 입력해주세요");
 				} else {
-					Object sdb[] = { table.getModel().getValueAt(row, 0), table.getModel().getValueAt(row, 1),
-							table.getModel().getValueAt(row, 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
-																							// ->
-					// sdb[]에 담기
+					Object sdb[] = { tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 0), tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 1),
+							tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 , 수량
 
 					if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						morningmodel.addRow(sdb);
-//	                    System.out.println("cal= " + sdb[2]);
 					} else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "점심") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						lunchmodel.addRow(sdb);
-//	                    System.out.println("cal= " + sdb[2]);
 					} else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "저녁") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						dinnermodel.addRow(sdb);
-//	                    System.out.println("cal= " + sdb[2]);
 					} else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "간식") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						dessertmodel.addRow(sdb);
-//	                    System.out.println("cal= " + sdb[2]);
 
 					}
 				}
@@ -516,9 +448,11 @@ public class FoodList {
 		fieldSearch.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				String val = fieldSearch.getText();// fieldsearch에서 텍스트가져오기
-				TableRowSorter<TableModel> trs = new TableRowSorter<>(table.getModel());
-				table.setRowSorter(trs); // table row정렬
-				trs.setRowFilter(RowFilter.regexFilter(val));
+				TableRowSorter<TableModel> tableRowSorter = new TableRowSorter<>(table.getModel());
+				table.setRowSorter(tableRowSorter); // table row정렬
+				tableRowSorter.setRowFilter(RowFilter.regexFilter(val)); // 필터링 하기
+
+				tableRowSorter2 = tableRowSorter;
 
 			}
 		});
@@ -569,6 +503,70 @@ public class FoodList {
 		lblChoiceTime.setBounds(12, 110, 121, 21);
 		lblChoiceTime.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblChoiceTime);
+
+	}
+
+	// 오른쪽 UserFoodList 출력 함수
+	public float showUserFoodlist(String date) {
+		selectedDate = date;
+		totalCal = 0;
+
+		System.out.println();
+		try {
+			ResultSet rs_morning = db.getInfo(
+					"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
+							+ user_id + "' and Eat_Time='아침' and Eat_date=" + "'" + selectedDate + "'");
+			ResultSet rs_lunch = db.getInfo(
+					"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
+							+ user_id + "' and Eat_Time='점심' and Eat_date=" + "'" + selectedDate + "'");
+			ResultSet rs_dinner = db.getInfo(
+					"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
+							+ user_id + "' and Eat_Time='저녁' and Eat_date=" + "'" + selectedDate + "'");
+			ResultSet rs_dessert = db.getInfo(
+					"select nutrient.Food_no, nutrient.Food_Name, user_eat.Food_cal, user_eat.Food_Count from user_eat left outer join nutrient on user_eat.Food_no = nutrient.Food_no where User_ID = '"
+							+ user_id + "' and Eat_Time='간식' and Eat_date=" + "'" + selectedDate + "'");
+			while (rs_morning.next()) {
+				String Food_no = rs_morning.getString("Food_no");
+				String Food_Name = rs_morning.getString("Food_Name");
+				String Food_cal = rs_morning.getString("Food_cal");
+				totalCal += Float.parseFloat(Food_cal);
+				Float Food_Count = rs_morning.getFloat("Food_Count");
+				Object data_morning[] = { Food_no, Food_Name, Food_cal, Food_Count };
+				System.out.println(Food_no +Food_Name );
+				morningmodel.addRow(data_morning);
+
+			}
+			while (rs_lunch.next()) {
+				String Food_no = rs_lunch.getString("Food_no");
+				String Food_Name = rs_lunch.getString("Food_Name");
+				String Food_cal = rs_lunch.getString("Food_cal");
+				totalCal += Float.parseFloat(Food_cal);
+				Float Food_Count = rs_lunch.getFloat("Food_Count");
+				Object data_lunch[] = { Food_no, Food_Name, Food_cal, Food_Count };
+				lunchmodel.addRow(data_lunch);
+			}
+			while (rs_dinner.next()) {
+				String Food_no = rs_dinner.getString("Food_no");
+				String Food_Name = rs_dinner.getString("Food_Name");
+				String Food_cal = rs_dinner.getString("Food_cal");
+				totalCal += Float.parseFloat(Food_cal);
+				Float Food_Count = rs_dinner.getFloat("Food_Count");
+				Object data_dinner[] = { Food_no, Food_Name, Food_cal, Food_Count };
+				dinnermodel.addRow(data_dinner);
+			}
+			while (rs_dessert.next()) {
+				String Food_no = rs_dessert.getString("Food_no");
+				String Food_Name = rs_dessert.getString("Food_Name");
+				String Food_cal = rs_dessert.getString("Food_cal");
+				totalCal += Float.parseFloat(Food_cal);
+				Float Food_Count = rs_dessert.getFloat("Food_Count");
+				Object data_dessert[] = { Food_no, Food_Name, Food_cal, Food_Count };
+				dessertmodel.addRow(data_dessert);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return totalCal;
 
 	}
 }

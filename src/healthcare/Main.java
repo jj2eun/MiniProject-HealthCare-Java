@@ -20,6 +20,7 @@ import java.beans.PropertyChangeEvent;
 public class Main {
 
 	JFrame frame;
+	float recommendCalory = 0;
 	private LocalDate today = LocalDate.now();
 	private String user_id;
 	 /**
@@ -60,7 +61,6 @@ public class Main {
 		contentPane.add(calendar);
 		JPanel jpanel = calendar.getDayChooser().getDayPanel();
 		Component component[] = jpanel.getComponents();
-		calTrafficLight(component, today);
 		// default로 오늘(Date)를 넘겨준다
 
 		calendar.getMonthChooser().addPropertyChangeListener(new PropertyChangeListener() {
@@ -147,6 +147,7 @@ public class Main {
 		lblText.setBounds(472, 160, 103, 22);
 		contentPane.add(lblText);
 
+		calTrafficLight(component, today); // 신호등 캘린더 출력
 	}
 
 	// 칼로리 얻어서 라벨에 뿌리기
@@ -180,7 +181,7 @@ public class Main {
 		// 활동지수 = HIGH : 60 MID : 40 LOW:20
 		DBConnect dao = new DBConnect();
 		String sql;
-		float result = 0;
+		
 		sql = "Select Day_Recommend_Cal from user_personal where User_ID = '" + user_id + "';";
 		// 회원번호별 유저정보 조회
 
@@ -188,25 +189,23 @@ public class Main {
 
 		try {
 			while (rs.next()) {
-				result = rs.getFloat("Day_Recommend_Cal");
+				this.recommendCalory = rs.getFloat("Day_Recommend_Cal");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return String.valueOf(result);
+		return String.valueOf(recommendCalory);
 	}
 
 	public void calTrafficLight(Component component[], LocalDate changedDate) {
 		float[] arr = new float[32];
 		// 현재 달력의 월 get
 		// 해당월의 일별로 db.report의 총칼로리 계산
-
+		for(int i = 0; i<arr.length; i++) arr[i] = 0.0f;
 		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		LocalDate firstDay = changedDate.with(TemporalAdjusters.firstDayOfMonth()); // 2021-02-01
 		LocalDate lastDay = changedDate.with(TemporalAdjusters.lastDayOfMonth()); // 2021-02-28
-		@SuppressWarnings("unused") // recCal 미사용 경고 끄기
-		float recCal = 0;
 		DBConnect dao = new DBConnect();
 		String sql;
 		sql = "Select * from report where User_ID = '" + user_id + "' and Report_Date between '" + firstDay + "' and '"
@@ -217,32 +216,31 @@ public class Main {
 			while (rs.next()) {
 				// 날짜별 총 칼로리 불러오기
 				float totalCal = rs.getFloat("Day_Cal") - rs.getFloat("Day_Use_Cal");
-				// recCal = rs.getFloat("Day_Recommend_Cal");
 				String date = transFormat.format(rs.getDate("Report_Date"));
 				int i = Integer.parseInt(date.substring(8)); // 일자만 i에 담기
-				// System.out.println("i : "+i + "date: "+date);
+				System.out.println("i : "+i + " date: "+date);
+				System.out.println(totalCal);
 				arr[i] = totalCal;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		System.out.println("firstday: " + firstDay);
-		System.out.println("lastday: " + lastDay);
-		// setCalColor(arr, component, recCal);
+		setCalColor(arr, component, recommendCalory);
 
 	}
 
-	public void setCalColor(float arr[], Component component[], float recCal) {
+	public void setCalColor(float arr[], Component component[], float recommendCalory) {
+		System.out.println("recommendCalory: "+recommendCalory);
 		for (int i = 1; i < arr.length; i++) {
 			if (arr[i] != 0) {
-				System.out.println("i: " + i);
-				System.out.println("arr[i] : " + arr[i]);
-				if (arr[i] >= recCal + 300)
-					component[i + 7].setBackground(Color.magenta); // 권장칼로리보다 300칼로리이상 섭취했을때
-				else if (arr[i] >= recCal + 150)
-					component[i + 7].setBackground(Color.yellow); // 권장칼로리보다 150칼로리이상 섭취했을때
-				else if (arr[i] > recCal - 100)
-					component[i + 7].setBackground(Color.GREEN); // 권장칼로리보다 -100칼로리이상 섭취했을때
+				//System.out.println("i: " + i);
+				//System.out.println("arr[i] : " + arr[i]);
+				if (arr[i] >= recommendCalory + 2000)
+					component[i + 7].setBackground(Color.magenta); // 권장칼로리보다 2000칼로리이상 섭취했을때
+				else if (arr[i] >= recommendCalory + 1000)
+					component[i + 7].setBackground(Color.yellow); // 권장칼로리보다 1000 칼로리이상 섭취했을때
+				else if (arr[i] > recommendCalory - 500)
+					component[i + 7].setBackground(Color.GREEN); // 권장칼로리-500 ~ 권장칼로리 + 999 칼로리이상 섭취했을때
 				else
 					component[i + 7].setBackground(Color.GREEN); // 나머지
 			}
