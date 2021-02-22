@@ -1,5 +1,4 @@
 package healthcare;
-//zㅁㄴㅇㄹ
 import java.sql.*;
 
 import javax.swing.JOptionPane;
@@ -186,13 +185,72 @@ public class DBConnect {
 	      }
 	}
 	
-	 //report 저장
+	
+	
+	public void user_exercise(String user_id, String choice_date, String choice_exercise, String exercise_cal, String choice_exercise_time) {
+	      try {
+	         Connection conn = getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(
+	        		 "INSERT INTO user_exercise"
+	               + "(User_ID, Exercise_Date, Exercise_no,Exercise_Cal, Exercise_Time)"
+	               + "VALUE"
+	               + "('" + user_id + "','" + choice_date + "','" + choice_exercise + "','" + exercise_cal + "','" + choice_exercise_time + "')");
+	         
+	         
+	         stmt.executeUpdate();
+	         
+	         
+	         System.out.println("The data has been saved! 1");
+	      } catch (Exception e) {
+	         e.printStackTrace();
+	      }
+
+	   }// 음식데이 저장 :아침
+	
+
+	
+	
+	public void exer_report(String user_id, String report_date , String use_Cal) {
+	      try { 
+	          //운동리스트가 미리 등록되어 있을 경우가 있으므로 if문 추가필요
+	         
+	         Connection conn = getConnection();
+	         
+	         PreparedStatement stmt = conn.prepareStatement("INSERT INTO report"
+	                  + " (Day_Use_Cal)" 
+	                  + " SELECT round(Exercise_cal*Exercise_Time,2)"
+	                  + " FROM user_exercise"
+	                  + " WHERE User_ID = " + "'"+user_id+"'"
+	                  + " AND Exercise_Date =" + "'" +report_date+ "'") 
+	               ;
+	                  
+	         
+	      } catch (Exception eee) {
+	         eee.printStackTrace();
+	      }
+	   }
+	
 
 	public static void delete(String choice_date, String user_id) {
 		try {
 			Connection conn = getConnection();
 			PreparedStatement stmt =  conn.prepareStatement("DELETE FROM user_eat"
 					+ " WHERE Eat_Date ="+"'"+choice_date+"' "
+					+"  AND User_ID ="+ "'"+ user_id+"'");
+			
+			stmt.executeUpdate();
+			System.out.println("The data has been deleted");
+		} catch(SQLException ee) {
+			System.out.println(ee.getMessage());
+		}
+	
+	}
+	
+	public void delete_exercise(String choice_date, String user_id) {
+		try {
+			Connection conn = getConnection();
+			PreparedStatement stmt =  conn.prepareStatement("DELETE FROM user_exercise"
+					+ " WHERE Exercise_Date ="+"'"+choice_date+"' "
 					+"  AND User_ID ="+ "'"+ user_id+"'");
 			
 			stmt.executeUpdate();

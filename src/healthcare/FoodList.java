@@ -234,11 +234,41 @@ public class FoodList {
 			System.out.println("select() 실행 오류 : " + e.getMessage());
 		}
 
-		JTable table = new JTable(model);
-		JTable morningTable = new JTable(morningmodel);
-		JTable lunchTable = new JTable(lunchmodel);
-		JTable dinnerTable = new JTable(dinnermodel);
-		JTable dessertTable = new JTable(dessertmodel);
+		JTable table = new JTable(model){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
+		JTable morningTable = new JTable(morningmodel){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
+		JTable lunchTable = new JTable(lunchmodel){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
+		JTable dinnerTable = new JTable(dinnermodel){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
+		JTable dessertTable = new JTable(dessertmodel){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
 
 		// Food_Code 컬럼 숨기기
 		table.setModel(model);

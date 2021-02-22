@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;	
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -38,9 +38,9 @@ public class ExerciseList {
 	Object ob2[][] = new Object[0][2];
 	DefaultTableModel model1;
 	DefaultTableModel model2;
+
 	String str1[] = { "운동코드", "운동", "소모칼로리" };
 	String str2[] = { "운동코드", "운동", "소모칼로리", "운동시간" };
-
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -190,9 +190,20 @@ public class ExerciseList {
 		contentPane.add(fieldTC);
 		fieldTC.setColumns(10);
 
-		model1 = new DefaultTableModel(ob1, str1);
-		model2 = new DefaultTableModel(ob2, str2);
-
+		model1 = new DefaultTableModel(ob1, str1){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
+		model2 = new DefaultTableModel(ob2, str2){
+			private static final long serialVersionUID = 1L;
+			public boolean isCellEditable(int i, int c){ 
+				return false; 
+			} 
+		};
+		
 		try {
 			ResultSet rs = db.getInfo("SELECT * FROM exercise;");
 			while (rs.next()) {
@@ -238,7 +249,8 @@ public class ExerciseList {
 					ResultSet rs_exercise = db.getInfo(
 							"SELECT Ex_no, User_ID, Exercise_Date, u.Exercise_no, Exercise_Name, e.Exercise_Cal, Exercise_Time "
 									+ "FROM user_exercise u LEFT OUTER JOIN exercise e " + "USING(Exercise_no) "
-									+ "WHERE (User_ID = '" + user_id + "') AND (Exercise_Date ='" + selectedDate + "');");
+									+ "WHERE (User_ID = '" + user_id + "') AND (Exercise_Date ='" + selectedDate
+									+ "');");
 
 					while (rs_exercise.next()) {
 						String Exercise_no = rs_exercise.getString("Exercise_no");
@@ -312,40 +324,38 @@ public class ExerciseList {
 
 				if (mdel != -1) {
 					System.out.println("mdel" + mdel);
-					totalCal -= Float.parseFloat((String) (model2.getValueAt(mdel, 2)));
+					totalCal -= Float.valueOf(model2.getValueAt(mdel, 2).toString());
 					fieldTC.setText(totalCal + "");
 					model2.removeRow(mdel);
 				}
 
+			}
+		});
+
+		// save버튼 동작
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String choice_date = choiceDate.getItem(choiceDate.getSelectedIndex()); // 선택된 날짜
+				System.out.println(choice_date);
+
+				db.delete_exercise(choice_date, user_id);
+				// 저장 버튼을 누르면 시간대별로 코드,수량만 저장하기
+				// db를 전부 지워 -> rowcount==0이면 저장안하고 rowcount >= 1이면 db에 저장
+				// DB지우는 함수 필요
+				if (model2.getRowCount() > 0) { // 테이블에 값이 있으면, DB에 저장
+					for (int i = 0; i < model2.getRowCount(); i++) {
+						db.user_exercise(user_id, choice_date, model2.getValueAt(i, 0).toString(),
+								model2.getValueAt(i, 2).toString(), model2.getValueAt(i, 3).toString());
+					}
+				}
+
+				db.exer_report(user_id, choice_date, fieldTC.getText());
+
+				JOptionPane.showMessageDialog(null, "운동데이터를 저장했습니다");
 
 			}
 		});
-		
-		
-//		// save버튼 동작
-//				btnSave.addActionListener(new ActionListener() {
-//					public void actionPerformed(ActionEvent e) {
-//
-//						String choice_date = choiceDate.getItem(choiceDate.getSelectedIndex()); // 선택된 날짜
-//						System.out.println(choice_date);
-//
-//						db.delete(choice_date, user_id);
-//						// 저장 버튼을 누르면 시간대별로 코드,수량만 저장하기
-//						// db를 전부 지워 -> rowcount==0이면 저장안하고 rowcount >= 1이면 db에 저장
-//						// DB지우는 함수 필요
-//						if (model2.getRowCount() > 0) { // 테이블에 값이 있으면, DB에 저장
-//							for (int i = 0; i < model2.getRowCount(); i++) {
-//								db.user_eat(user_id, choice_date,model2.getValueAt(i, 0).toString(),
-//										model2.getValueAt(i, 2).toString(), model2.getValueAt(i, 3).toString());
-//							}
-//						}
-//
-//						db.report(user_id, choice_date, "0.0", fieldTC.getText(), "0.0", "0.0", "0.0", "0.0");
-//
-//						JOptionPane.showMessageDialog(null, "운동데이터를 저장했습니다");
-//
-//					}
-//				});
 		// ====================================JLabel====================================
 
 		JLabel lblTC = new JLabel("총 칼로리");
