@@ -22,7 +22,9 @@ public class Main {
 	JFrame frame;
 	private LocalDate today = LocalDate.now();
 	private String user_id;
-
+	 /**
+	    * @wbp.parser.constructor
+	    */
 	public Main() {
 		initialize();
 	}

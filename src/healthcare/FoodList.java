@@ -1,7 +1,6 @@
 package healthcare;
 
 import java.awt.Choice;
-
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -10,8 +9,13 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 
 import javax.swing.JButton;
@@ -29,8 +33,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+//.....ㅁㄴㅇㄹ
 public class FoodList {
-
 	DBConnect db = new DBConnect();
 
 	float totalCal = (float) 0;
@@ -98,11 +102,11 @@ public class FoodList {
 		contentPane.setLayout(null);
 
 		// ==============================Choice==============================
-		Calendar calender1 = Calendar.getInstance();
+		Calendar calender = Calendar.getInstance();
 
-		int today_year = calender1.get(Calendar.YEAR);
-		int today_month = calender1.get(Calendar.MONTH) + 1;
-		int today_day = calender1.get(Calendar.DAY_OF_MONTH);
+		int today_year = calender.get(Calendar.YEAR);
+		int today_month = calender.get(Calendar.MONTH) + 1;
+		int today_day = calender.get(Calendar.DAY_OF_MONTH);
 
 		String m = String.format("%02d", today_month);
 		String d = String.format("%02d", today_day);
@@ -113,11 +117,9 @@ public class FoodList {
 		choiceDate.setBounds(135, 83, 211, 20);
 		contentPane.add(choiceDate);
 
-		Calendar calender2 = Calendar.getInstance();
 		for (int i = 2021; i < 2023; i++) {
 			for (int j = 1; j <= 12; j++) {
-				calender2.set(i, j - 1, 1);
-				for (int k = 1; k <= calender2.getActualMaximum(Calendar.DAY_OF_MONTH); k++) {
+				for (int k = 1; k <= 31; k++) {
 					choiceDate.add(String.valueOf(i + "-" + j + "-" + k));
 				}
 			}
@@ -363,7 +365,7 @@ public class FoodList {
 				} else {
 					Object sdb[] = { table.getModel().getValueAt(row, 0), table.getModel().getValueAt(row, 1),
 							table.getModel().getValueAt(row, 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
-					// ->
+																							// ->
 					// sdb[]에 담기
 
 					if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
@@ -371,25 +373,25 @@ public class FoodList {
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						morningmodel.addRow(sdb);
-						// System.out.println("cal= " + sdb[2]);
+//	                    System.out.println("cal= " + sdb[2]);
 					} else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "점심") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						lunchmodel.addRow(sdb);
-						// System.out.println("cal= " + sdb[2]);
+//	                    System.out.println("cal= " + sdb[2]);
 					} else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "저녁") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						dinnermodel.addRow(sdb);
-						// System.out.println("cal= " + sdb[2]);
+//	                    System.out.println("cal= " + sdb[2]);
 					} else if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "간식") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
 						totalCal += (float) sdb[2];
 						fieldTC.setText(totalCal + "");
 						dessertmodel.addRow(sdb);
-						// System.out.println("cal= " + sdb[2]);
+//	                    System.out.println("cal= " + sdb[2]);
 
 					}
 				}
@@ -409,25 +411,25 @@ public class FoodList {
 				int dsdel = dessertTable.getSelectedRow();
 				if (mdel != -1) {
 					System.out.println("mdel" + mdel);
-					totalCal -= Float.parseFloat((String) (morningmodel.getValueAt(mdel, 2)));
+					totalCal -= Float.valueOf(morningmodel.getValueAt(mdel, 2).toString());
 					fieldTC.setText(totalCal + "");
 					morningmodel.removeRow(mdel);
 				}
 				if (ldel != -1) {
-					System.out.println("ldel");
-					totalCal -= Float.parseFloat((String) (lunchmodel.getValueAt(ldel, 2)));
+					System.out.println("ldel" + ldel);
+					totalCal -= Float.valueOf(lunchmodel.getValueAt(ldel, 2).toString());
 					fieldTC.setText(totalCal + "");
 					lunchmodel.removeRow(ldel);
 				}
 				if (ddel != -1) {
-					System.out.println("ddel");
-					totalCal -= Float.parseFloat((String) (dinnermodel.getValueAt(ddel, 2)));
+					System.out.println("ddel" + ddel);
+					totalCal -= Float.valueOf(dinnermodel.getValueAt(ddel, 2).toString());
 					fieldTC.setText(totalCal + "");
 					dinnermodel.removeRow(ddel);
 				}
 				if (dsdel != -1) {
-					System.out.println("dsdel");
-					totalCal -= Float.parseFloat((String) (dessertmodel.getValueAt(dsdel, 2)));
+					System.out.println("dsdel" + dsdel);
+					totalCal -= Float.valueOf(dessertmodel.getValueAt(dsdel, 2).toString());
 					fieldTC.setText(totalCal + "");
 					dessertmodel.removeRow(dsdel);
 
@@ -436,7 +438,6 @@ public class FoodList {
 			}
 		});
 
-		// save버튼 동작
 		// save버튼 동작
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -474,7 +475,7 @@ public class FoodList {
 					}
 				}
 
-				db.report(user_id, choice_date, "0.0", fieldTC.getText(), "0.0", "0.0", "0.0", "0.0");
+				db.food_report(user_id, choice_date, fieldTC.getText());
 
 				JOptionPane.showMessageDialog(null, "음식데이터를 저장했습니다");
 
