@@ -19,11 +19,9 @@ public class Report  {
 
 	JFrame frame;
 	private String user_id;
-	
 	/**
 	 * @wbp.parser.constructor
 	 */
-	
 	public Report() {initialize() ;}
 	public Report(String User_ID) {
 		user_id = User_ID;

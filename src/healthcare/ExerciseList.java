@@ -34,12 +34,8 @@ public class ExerciseList  {
 	Object ob1[] [] =new Object[0][3];
 	Object ob2[] [] =new Object[0][7];
 	String str1[] = {"운동코드","운동이름","소모칼로리"};
-	String str2[] = {"운동이름", "소모칼로리", "운동시간"};
+	String str2[] = {"PK", "사용자ID", "날짜", "운동코드", "운동이름", "소모칼로리", "운동시간"};
 	String selectedDate;
-	/**
-	 * @wbp.parser.constructor
-	 */
-	
 	public ExerciseList() {initialize() ;}
 	public ExerciseList(String User_ID) {
 		user_id = User_ID;
@@ -64,14 +60,6 @@ public class ExerciseList  {
 		contentPane.setVisible(true);
 		
 	
-		//====================================JTable====================================
-//		JTable tableExercise = new JTable();
-//		tableExercise.setBounds(12, 110, 387, 391);
-//		contentPane.add(tableExercise);
-//		
-//		JTable tableMyexer = new JTable();
-//		tableMyexer.setBounds(412, 110, 347, 391);
-//		contentPane.add(tableMyexer);
 		
 		//====================================Choice====================================
 	      Calendar calender = Calendar.getInstance();
@@ -87,12 +75,33 @@ public class ExerciseList  {
 	       
 	       System.out.println(selectedDate);
 
-	       
+//			JComboBox<String> combo = new JComboBox<String>();
+//			combo.setBounds(135, 83, 264, 21);
+//			contentPane.add(combo);
+//			for (int i = 2021; i < 2023; i++) {
+//				for (int j = 1; j <= 12; j++) {
+//					for (int k = 1; k <= 31; k++) {
+//						combo.addItem(String.valueOf(i + "년" + j + "월" + k + "일"));
+//					}
+//				}
+//			}
+//
+//			combo.setSelectedItem(today_year + "년" + today_month + "월" + today_day + "일");
+//
+//			combo.addItemListener(new ItemListener() {
+//				public void itemStateChanged(ItemEvent e) {
+//
+//					System.out.println(e.getItem());
+//					selectedDate = (String) e.getItem();
+//					System.out.println(selectedDate);
+//
+//				}
+//			});
+	    
 		
 		Choice choiceDate = new Choice();
 		choiceDate.setBounds(135, 83, 264, 21);
 		contentPane.add(choiceDate);
-		
 		for (int i = 2021 ; i < 2023 ; i++) {
 			for(int j =1 ; j <=12 ; j++) {
 				for(int k=1 ; k <=31 ; k++) {
@@ -103,7 +112,15 @@ public class ExerciseList  {
 		
 		choiceDate.select(today_year + "년" + today_month + "월" + today_day + "일");
 		
-		
+		choiceDate.addItemListener(new ItemListener() {
+	           public void itemStateChanged(ItemEvent e) {
+	        	   
+	              System.out.println(e.getItem());
+	              selectedDate = (String) e.getItem();
+	              System.out.println(selectedDate);
+	              
+	           }
+	        });
 		//====================================JButton====================================
 		JButton btnMain = new JButton("메인");
 		btnMain.setBounds(12, 10, 121, 67);
@@ -141,9 +158,6 @@ public class ExerciseList  {
 			}
 		});
 		
-		JButton btnSearch = new JButton("검색");
-		btnSearch.setBounds(702, 10, 70, 40);
-		contentPane.add(btnSearch);
 		
 		JButton btnPlus = new JButton("+");
 		btnPlus.setBounds(135, 511, 80, 40);
@@ -162,7 +176,7 @@ public class ExerciseList  {
 		
 		//====================================TextField====================================
 		JTextField fieldSearch = new JTextField();
-		fieldSearch.setBounds(412, 10, 278, 40);
+		fieldSearch.setBounds(432, 10, 320, 40);
 		fieldSearch.setColumns(10);
 		contentPane.add(fieldSearch);
 		
@@ -175,7 +189,6 @@ public class ExerciseList  {
 		fieldTC.setBounds(541, 511, 231, 33);
 		fieldTC.setColumns(10);
 		contentPane.add(fieldTC);
-		
 		
 		model1 = new DefaultTableModel(ob1,str1);
 		
@@ -211,16 +224,7 @@ public class ExerciseList  {
 			}
 		});
 		
-		//DB운동데이터 화면에 뿌리기
-				choiceDate.addItemListener(new ItemListener() {
-			           public void itemStateChanged(ItemEvent e) {
-			        	   
-			              System.out.println(e.getItem());
-			              selectedDate = (String) e.getItem();
-			              System.out.println("선택한날짜="+selectedDate);
-			              
-			           }
-			        });
+		
 		
 		model2 = new DefaultTableModel(ob2,str2);
 		
@@ -237,7 +241,7 @@ public class ExerciseList  {
 				 String Exercise_Name = rs.getString("Exercise_Name");
 				 Float Exercise_Cal = rs.getFloat("Exercise_Cal");
 				 Float Exercise_Time = rs.getFloat("Exercise_Time");
-				 Object data[] = {Exercise_Name, Exercise_Cal, Exercise_Time};
+				 Object data[] = {Ex_no, User_ID, Exercise_Date, Exercise_no, Exercise_Name, Exercise_Cal, Exercise_Time};
 				 model2.addRow(data);
 				
 			 }
