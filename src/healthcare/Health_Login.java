@@ -1,11 +1,12 @@
 package healthcare;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,19 +29,22 @@ public class Health_Login extends JFrame {
 	// 프레임 생성
 	public Health_Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 418, 295);
+		setBounds(700, 400, 418, 295);
 		Login_panel = new JPanel();
+		Login_panel.setBackground(Color.WHITE);
 		Login_panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(Login_panel);
 		Login_panel.setLayout(null);
 		Login_panel.setLayout(null);
 
 		lblJoin = new JLabel("로그인");
+		lblJoin.setForeground(new Color(255, 255, 255));
 		Font f1 = new Font("돋움", Font.BOLD, 20);// 돋움체
 		Login_panel.setLayout(null);
-		lblJoin.setFont(new Font("HY헤드라인M", Font.BOLD, 20));
-		lblJoin.setBounds(156, 10, 73, 32);
+		lblJoin.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
+		lblJoin.setBounds(175, 0, 55, 32);
 		Login_panel.add(lblJoin);
+		
 
 		// 로그인 라벨
 		JLabel lblLogin = new JLabel("ID");
@@ -61,32 +65,54 @@ public class Health_Login extends JFrame {
 		Login_panel.add(loginID);
 		loginID.setColumns(10);
 
+		// 회원가입 버튼 이미지
+		ImageIcon join = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\login_signup.png");
+		Image join1 = join.getImage();
+		Image join2 = join1.getScaledInstance(104, 29, Image.SCALE_SMOOTH);
+		ImageIcon join4 = new ImageIcon(join2);
 		// 회원가입 버튼
-		joinBtn = new JButton("회원가입");
+		joinBtn = new JButton(join4);
 		joinBtn.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
 		joinBtn.setBackground(Color.WHITE);
 		joinBtn.setBounds(71, 202, 104, 29);
 		Login_panel.add(joinBtn);
+		joinBtn.setBorderPainted(false); //버튼테두리 없애기
 
+		// 종료 버튼 이미지
+		ImageIcon close = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\login_close.png");
+		Image close1 = close.getImage();
+		Image close2 = close1.getScaledInstance(104, 29, Image.SCALE_SMOOTH);
+		ImageIcon close3 = new ImageIcon(close2);
 		// 종료 버튼
-		exitBtn = new JButton("종료");
+		exitBtn = new JButton(close3);
 		exitBtn.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
 		exitBtn.setBackground(Color.WHITE);
 		exitBtn.setBounds(232, 202, 104, 29);
 		Login_panel.add(exitBtn);
+		exitBtn.setBorderPainted(false); //버튼테두리 없애기
 
+		// 로그인 버튼 이미지
+		ImageIcon login = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\login_login.png");
+		Image login1 = login.getImage();
+		Image login2 = login1.getScaledInstance(78, 92, Image.SCALE_SMOOTH);
+		ImageIcon login3 = new ImageIcon(login2);
 		// 로그인 버튼
-		loginBtn = new JButton("로그인");
-
+		loginBtn = new JButton(login3);
 		loginBtn.setFont(new Font("HY헤드라인M", Font.PLAIN, 15));
 		loginBtn.setBackground(Color.WHITE);
 		loginBtn.setBounds(281, 71, 78, 92);
 		Login_panel.add(loginBtn);
+		loginBtn.setBorderPainted(false); //버튼테두리 없애
 
 		loginPWD = new JPasswordField();
 		loginPWD.setFont(new Font("Arial", Font.PLAIN, 15));
 		loginPWD.setBounds(85, 128, 176, 32);
 		Login_panel.add(loginPWD);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 402, 32);
+		Login_panel.add(panel);
+		panel.setBackground(new Color(112,139,151)); ////패널색상바꾸기
 
 		setVisible(true);
 

@@ -1,7 +1,26 @@
 package healthcare;
 
-import javax.swing.*;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -12,17 +31,9 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.data.category.CategoryDataset;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.time.*;
-import java.util.Calendar;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.Color;
 
 public class Report {
 
@@ -32,6 +43,10 @@ public class Report {
 	private String sql;
 	LocalDate today = LocalDate.now();
 	SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	/**
+	 * @wbp.parser.constructor
+	 */
 
 	public Report() {
 		initialize();
@@ -45,6 +60,7 @@ public class Report {
 
 	private void initialize() {
 		frame = new JFrame();
+		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setTitle("FoodList");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setBounds(100, 100, 800, 600);
@@ -54,7 +70,8 @@ public class Report {
 
 		// Content Panel 생성
 		JPanel contentPane = new JPanel();
-		contentPane.setBounds(0, 0, 794, 134);
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setBounds(0, 0, 794, 124);
 		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -62,7 +79,7 @@ public class Report {
 
 		// 몸무게 CharPanel 생성
 		chartPanel = createChartPanel(1);
-		chartPanel.setBounds(50, 140, 700, 240);
+		chartPanel.setBounds(44, 138, 700, 240);
 		frame.getContentPane().add(chartPanel);
 		chartPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		chartPanel.setLayout(null);
@@ -71,17 +88,23 @@ public class Report {
 		// 탄단지 ChartPanel 생성
 		JPanel chartPanel2 = new JPanel();
 		chartPanel2 = createChartPanel(2);
-		chartPanel2.setBounds(50, 394, 700, 153);
+		chartPanel2.setBounds(44, 373, 700, 172);
 		frame.getContentPane().add(chartPanel2);
 		chartPanel2.setBorder(new EmptyBorder(5, 5, 5, 5));
 		chartPanel2.setLayout(null);
 		chartPanel2.setVisible(true);
 		// ====================================JButton====================================
-		// 메인버튼
-		JButton btnMain = new JButton("메인");
+		// 메인 버튼 이미지
+		ImageIcon report_main = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\report_main.png");
+		Image report_main1 = report_main.getImage();
+		Image report_main2 = report_main1.getScaledInstance(167, 50, Image.SCALE_SMOOTH);
+		ImageIcon report_main3 = new ImageIcon(report_main2);
+		// 메인 버튼
+		JButton btnMain = new JButton(report_main3);
 		btnMain.setFont(new Font("굴림", Font.BOLD, 20));
 		btnMain.setBounds(40, 20, 167, 50);
 		contentPane.add(btnMain);
+		btnMain.setBorderPainted(false); //버튼테두리 없애
 
 		btnMain.addActionListener(new ActionListener() {
 			@Override
@@ -91,11 +114,17 @@ public class Report {
 				frame.dispose();
 			}
 		}); // Main버튼 클릭 액션
-		// 식단버튼
-		JButton btnFoodlist = new JButton("식단");
+		// 식단 버튼 이미지
+		ImageIcon report_food = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\report_food.png");
+		Image report_food1 = report_food.getImage();
+		Image report_food2 = report_food1.getScaledInstance(167, 50, Image.SCALE_SMOOTH);
+		ImageIcon report_food3 = new ImageIcon(report_food2);
+		// 식단 버튼
+		JButton btnFoodlist = new JButton(report_food3);
 		btnFoodlist.setFont(new Font("굴림", Font.BOLD, 20));
-		btnFoodlist.setBounds(304, 20, 167, 50);
+		btnFoodlist.setBounds(219, 20, 167, 50);
 		contentPane.add(btnFoodlist);
+		btnFoodlist.setBorderPainted(false); //버튼테두리 없애
 
 		btnFoodlist.addActionListener(new ActionListener() {
 			@Override
@@ -105,11 +134,18 @@ public class Report {
 				frame.dispose();
 			}
 		}); // 식단버튼 클릭 액션
+		// 운동 버튼 이미지
+		ImageIcon report_ex = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\report_ex.png");
+		Image report_ex1 = report_ex.getImage();
+		Image report_ex2 = report_ex1.getScaledInstance(167, 50, Image.SCALE_SMOOTH);
+		ImageIcon report_ex3 = new ImageIcon(report_ex2);
 		// 운동버튼
-		JButton btnExer = new JButton("운동");
+		JButton btnExer = new JButton(report_ex3);
 		btnExer.setFont(new Font("굴림", Font.BOLD, 20));
-		btnExer.setBounds(564, 20, 167, 50);
+		btnExer.setBounds(398, 20, 167, 50);
 		contentPane.add(btnExer);
+		btnExer.setBorderPainted(false); //버튼테두리 없애
+
 
 		btnExer.addActionListener(new ActionListener() {
 			@Override
@@ -120,33 +156,52 @@ public class Report {
 			}
 		}); // 운동버튼 클릭 액션
 
-		JButton btnWeightSave = new JButton("OK");
+		// 리포트 버튼 이미지
+		ImageIcon report_report = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\report_report.png");
+		Image report_report1 = report_report.getImage();
+		Image report_report2 = report_report1.getScaledInstance(167, 50, Image.SCALE_SMOOTH);
+		ImageIcon report_report3 = new ImageIcon(report_report2);
+		// 리포트버튼
+		JButton btnRept = new JButton(report_report3);
+		btnRept.setFont(new Font("굴림", Font.BOLD, 20));
+		btnRept.setBounds(577, 20, 167, 50);
+		contentPane.add(btnRept);
+		btnRept.setBorderPainted(false); //버튼테두리 없애
+
+
+		// ok 버튼 이미지
+		ImageIcon report_ok = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\report_ok.png");
+		Image report_ok1 = report_ok.getImage();
+		Image report_ok2 = report_ok1.getScaledInstance(97, 29, Image.SCALE_SMOOTH);
+		ImageIcon report_ok3 = new ImageIcon(report_ok2);
+		JButton btnWeightSave = new JButton(report_ok3);
 		btnWeightSave.setFont(new Font("굴림", Font.BOLD, 20));
-		btnWeightSave.setBounds(675, 99, 97, 29);
+		btnWeightSave.setBounds(639, 95, 97, 29);
 		contentPane.add(btnWeightSave);
-		// =================================== textField
-		// ===================================
+		btnWeightSave.setBorderPainted(false); //버튼테두리 없애
+
+		// =================================== textField=========================================
+		
 		JTextField txtWeight = new JTextField();
-		txtWeight.setBounds(253, 99, 405, 29);
+		txtWeight.setBounds(253, 95, 374, 29);
 		contentPane.add(txtWeight);
 		txtWeight.setColumns(10);
-		// =================================== JLabel
-		// ======================================
+		// =================================== JLabel=========================================
 		JLabel lblWeight = new JLabel("체중");
-		lblWeight.setFont(new Font("굴림", Font.BOLD, 20));
+		lblWeight.setForeground(Color.DARK_GRAY);
+		lblWeight.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		lblWeight.setHorizontalAlignment(SwingConstants.CENTER);
-		lblWeight.setBounds(40, 99, 113, 29);
+		lblWeight.setBounds(40, 95, 105, 29);
 		contentPane.add(lblWeight);
-
-		// =================================== dataChooser
-		// ==================================
+		
+		// =================================== dataChooser=========================================	
 		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(144, 99, 97, 29);
+		dateChooser.setBounds(144, 95, 97, 29);
 		dateChooser.setCalendar(Calendar.getInstance());
 		contentPane.add(dateChooser);
 
-		// =============================== Action Handler
-		// ===================================
+		// =============================== Action Handlerr=========================================	
+		
 		// 몸무게 입력 Button Click 액션
 		btnWeightSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -200,7 +255,7 @@ public class Report {
 
 			plot = (CategoryPlot) chart.getPlot();
 			ValueAxis vaxis = (ValueAxis) plot.getRangeAxis();
-			vaxis.setRange(30, 70); // y축 범위 (몸무게최저 - 10 , 몸무게최고 + 10)
+			vaxis.setRange(30, 120); // y축 범위 (몸무게최저 - 10 , 몸무게최고 + 10)
 			lineRenderer = (LineAndShapeRenderer) plot.getRenderer();
 			lineRenderer.setDefaultShapesVisible(true);
 			lineRenderer.setDefaultItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", decimalformat));

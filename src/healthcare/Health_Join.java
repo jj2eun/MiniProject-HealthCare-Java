@@ -1,11 +1,14 @@
 package healthcare;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,9 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.Color;
-
-import java.sql.*;
+import javax.swing.JPasswordField;
 
 public class Health_Join extends JFrame {
 	DBConnect DBConnect = new DBConnect();
@@ -36,195 +37,215 @@ public class Health_Join extends JFrame {
 	private JButton joinCompleteBtn;
 	private JButton undoBtn;
 	private JButton dcBtn;
-	private boolean idcheck = true; // idÁßº¹Ã¼Å© º¯¼ö (trueÀÌ¸é Áßº¹Ã¼Å©¸¦ ´©¸£Áö ¾ÊÀ½)
+	private boolean idcheck = true; // idì¤‘ë³µì²´í¬ ë³€ìˆ˜ (trueì´ë©´ ì¤‘ë³µì²´í¬ë¥¼ ëˆ„ë¥´ì§€ ì•ŠìŒ)
+	private JPasswordField passwordField;
 
-	// ¿¡ÇÃ¸®ÄÉÀÌ¼Ç ·±Ä¡
-	public static void main(String[] args) {
+	// ì—í”Œë¦¬ì¼€ì´ì…˜ ëŸ°ì¹˜
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Health_Join frame = new Health_Join();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-	}
-
-	// ÇÁ·¹ÀÓ»ı¼º
+	// í”„ë ˆì„ìƒì„±
 	public Health_Join() {
+
+	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 383, 547);
+		setBounds(700, 250, 383, 547);
 		Join_panel = new JPanel();
+		Join_panel.setBackground(Color.WHITE);
 		Join_panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(Join_panel);
 		Join_panel.setLayout(null);
 
-		/* ======================= ¶óº§ ================================ */
+		/* ======================= ë¼ë²¨ ================================ */
 
-		// È¸¿ø°¡ÀÔ ¶óº§,ÆùÆ®¼³Á¤
-		lblJoin = new JLabel("È¸¿ø°¡ÀÔ");
-		Font f1 = new Font("µ¸¿ò", Font.BOLD, 20);// µ¸¿òÃ¼
+		// íšŒì›ê°€ì… ë¼ë²¨,í°íŠ¸ì„¤ì •
+		lblJoin = new JLabel("íšŒì›ê°€ì…");
+		lblJoin.setForeground(new Color(255, 255, 255));
+		Font f1 = new Font("ë‹ì›€", Font.BOLD, 20);// ë‹ì›€ì²´
 		Join_panel.setLayout(null);
-		lblJoin.setFont(new Font("HYÇìµå¶óÀÎM", Font.BOLD, 20));
-		lblJoin.setBounds(131, 30, 83, 32);
+		lblJoin.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 17));
+		lblJoin.setBounds(144, 0, 85, 64);
 		Join_panel.add(lblJoin);
 
-		// ¾ÆÀÌµğ ¶óº§
+		// ì•„ì´ë”” ë¼ë²¨
 		JLabel Idlabel = new JLabel("ID");
-		Idlabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		Idlabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Idlabel.setBounds(48, 103, 20, 20);
 		Join_panel.add(Idlabel);
 
-		// ÆĞ½º¿öµå ¶óº§
+		// íŒ¨ìŠ¤ì›Œë“œ ë¼ë²¨
 		JLabel Pwlabel = new JLabel("PWD");
-		Pwlabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		Pwlabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Pwlabel.setBounds(39, 155, 35, 20);
 		Join_panel.add(Pwlabel);
 
-		// ÀÌ¸§ ¶óº§
-		JLabel Namelabel = new JLabel("ÀÌ¸§");
-		Namelabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		// ì´ë¦„ ë¼ë²¨
+		JLabel Namelabel = new JLabel("ì´ë¦„");
+		Namelabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Namelabel.setBounds(39, 205, 35, 20);
 		Join_panel.add(Namelabel);
 
-		// Å° ¶óº§
-		JLabel Heighlabel = new JLabel("Å°");
-		Heighlabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		// í‚¤ ë¼ë²¨
+		JLabel Heighlabel = new JLabel("í‚¤");
+		Heighlabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Heighlabel.setBounds(45, 258, 20, 20);
 		Join_panel.add(Heighlabel);
 
-		// ¸ö¹«°Ô ¶óº§
-		JLabel Weighlabel = new JLabel("¸ö¹«°Ô");
-		Weighlabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		// ëª¸ë¬´ê²Œ ë¼ë²¨
+		JLabel Weighlabel = new JLabel("ëª¸ë¬´ê²Œ");
+		Weighlabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Weighlabel.setBounds(32, 311, 46, 20);
 		Join_panel.add(Weighlabel);
 
-		// È°µ¿Áö¼ö ¶óº§
-		JLabel Actlabel = new JLabel("È°µ¿Áö¼ö");
-		Actlabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		// í™œë™ì§€ìˆ˜ ë¼ë²¨
+		JLabel Actlabel = new JLabel("í™œë™ì§€ìˆ˜");
+		Actlabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Actlabel.setBounds(27, 361, 57, 20);
 		Join_panel.add(Actlabel);
 
-		// ¼ºº° ¶óº§
-		JLabel Genlabel = new JLabel("¼ºº°");
-		Genlabel.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 13));
+		// ì„±ë³„ ë¼ë²¨
+		JLabel Genlabel = new JLabel("ì„±ë³„");
+		Genlabel.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 13));
 		Genlabel.setBounds(39, 403, 29, 20);
 		Join_panel.add(Genlabel);
 
-		/* ======================= ÅØ½ºÆ®ÇÊµå ================================ */
+		/* ======================= í…ìŠ¤íŠ¸í•„ë“œ ================================ */
 
-		// ¾ÆÀÌµğ ÅØ½ºÆ®ÇÊµå
+		// ì•„ì´ë”” í…ìŠ¤íŠ¸í•„ë“œ
 		id = new JTextField();
-		id.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		id.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		id.setColumns(10);
 		id.setBounds(100, 96, 160, 32);
 		Join_panel.add(id);
 
-		// ÆĞ½º¿öµå ÅØ½ºÆ®ÇÊµå
-		psw = new JTextField();
-		psw.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		// íŒ¨ìŠ¤ì›Œë“œ í…ìŠ¤íŠ¸í•„ë“œ				
+		psw = new JPasswordField();
+		psw.setFont(new Font("êµ´ë¦¼", Font.PLAIN, 15));
 		psw.setColumns(10);
 		psw.setBounds(100, 148, 160, 32);
 		Join_panel.add(psw);
 
-		// ÀÌ¸§ ÅØ½ºÆ®ÇÊµå
+		// ì´ë¦„ í…ìŠ¤íŠ¸í•„ë“œ
 		name = new JTextField();
-		name.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		name.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		name.setColumns(10);
 		name.setBounds(100, 200, 160, 32);
 		Join_panel.add(name);
 
-		// Å° ÅØ½ºÆ®ÇÊµå
+		// í‚¤ í…ìŠ¤íŠ¸í•„ë“œ
 		height = new JTextField();
-		height.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		height.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		height.setColumns(10);
 		height.setBounds(100, 252, 160, 32);
 		Join_panel.add(height);
 
-		// ¸ö¹«°Ô ÅØ½ºÆ®ÇÊµå
+		// ëª¸ë¬´ê²Œ í…ìŠ¤íŠ¸í•„ë“œ
 		weight = new JTextField();
-		weight.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		weight.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		weight.setColumns(10);
 		weight.setBounds(100, 304, 160, 32);
 		Join_panel.add(weight);
 
-		/* ======================= ¹öÆ° ================================ */
+		/* ======================= ë²„íŠ¼ ================================ */
 
-		// È¸¿ø°¡ÀÔ ¹öÆ°
-		joinCompleteBtn = new JButton("È¸¿ø°¡ÀÔ");
-		joinCompleteBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		// íšŒì›ê°€ì… ë²„íŠ¼ ì´ë¯¸ì§€
+		ImageIcon signup_signup = new ImageIcon("C:\\Users\\kitri\\Desktop\\ë¯¸ë‹ˆí”„ë¡œì íŠ¸\\icon\\signup_signup.png");
+		Image signup_signup1 = signup_signup.getImage();
+		Image signup_signup2 = signup_signup1.getScaledInstance(101, 29, Image.SCALE_SMOOTH);
+		ImageIcon signup_signup3 = new ImageIcon(signup_signup2);
+		// íšŒì›ê°€ì… ë²„íŠ¼
+		joinCompleteBtn = new JButton(signup_signup3);
+		joinCompleteBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		joinCompleteBtn.setBackground(Color.WHITE);
-		joinCompleteBtn.setBounds(66, 443, 101, 29);
+		joinCompleteBtn.setBounds(63, 443, 101, 29);
 		Join_panel.add(joinCompleteBtn);
 
-		// Ãë¼Ò ¹öÆ°
-		undoBtn = new JButton("Ãë¼Ò");
-		undoBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		// ì·¨ì†Œ ë²„íŠ¼ ì´ë¯¸ì§€
+		ImageIcon signup_cancel = new ImageIcon("C:\\Users\\kitri\\Desktop\\ë¯¸ë‹ˆí”„ë¡œì íŠ¸\\icon\\signup_cancel.png");
+		Image signup_cancel1 = signup_cancel.getImage();
+		Image signup_cancel2 = signup_cancel1.getScaledInstance(101, 29, Image.SCALE_SMOOTH);
+		ImageIcon signup_cancel3 = new ImageIcon(signup_cancel2);
+		// ì·¨ì†Œ ë²„íŠ¼
+		undoBtn = new JButton(signup_cancel3);
+		undoBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		undoBtn.setBackground(Color.WHITE);
 		undoBtn.setForeground(Color.DARK_GRAY);
-		undoBtn.setBounds(201, 443, 101, 29);
+		undoBtn.setBounds(210, 443, 101, 29);
 		Join_panel.add(undoBtn);
+		undoBtn.setBorderPainted(false); // ë²„íŠ¼í…Œë‘ë¦¬ ì—†ì• ê¸°
 
-		// Áßº¹È®ÀÎ ¹öÆ°
-		dcBtn = new JButton("<HTML>Áßº¹<br>È®ÀÎ</HTML>");
-		dcBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		// ì¤‘ë³µí™•ì¸ ë²„íŠ¼ ì´ë¯¸ì§€
+		ImageIcon signup_check = new ImageIcon("C:\\Users\\kitri\\Desktop\\ë¯¸ë‹ˆí”„ë¡œì íŠ¸\\icon\\signup_check.png");
+		Image signup_check1 = signup_check.getImage();
+		Image signup_check2 = signup_check1.getScaledInstance(64, 52, Image.SCALE_SMOOTH);
+		ImageIcon signup_check3 = new ImageIcon(signup_check2);
+		// ì¤‘ë³µí™•ì¸ ë²„íŠ¼
+		dcBtn = new JButton(signup_check3);
+		dcBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		dcBtn.setBackground(Color.WHITE);
 		dcBtn.setForeground(Color.DARK_GRAY);
 		dcBtn.setBounds(276, 85, 64, 52);
 		Join_panel.add(dcBtn);
+		dcBtn.setBorderPainted(false); // ë²„íŠ¼í…Œë‘ë¦¬ ì—†ì• ê¸°
 
-		/* ======================= ¶óµğ¿À¹Ú½º, ¹öÆ° ================================ */
+		/* ======================= ë¼ë””ì˜¤ë°•ìŠ¤, ë²„íŠ¼ ================================ */
 
-		// È°µ¿Áö¼ö ¶óµğ¿À¹Ú½º
+		// í™œë™ì§€ìˆ˜ ë¼ë””ì˜¤ë°•ìŠ¤
 		JRadioButton highBtn = new JRadioButton("High");
-		highBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		highBtn.setBackground(Color.WHITE);
+		highBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		highBtn.setBounds(92, 351, 57, 41);
 		JRadioButton midBtn = new JRadioButton("Mid");
-		midBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		midBtn.setBackground(Color.WHITE);
+		midBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		midBtn.setBounds(157, 351, 57, 41);
 		JRadioButton lowBtn = new JRadioButton("Low");
-		lowBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		lowBtn.setBackground(Color.WHITE);
+		lowBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		lowBtn.setBounds(218, 351, 57, 41);
 
-		// ¼ºº° ¶óµğ¿À¹Ú½º
-		JRadioButton menBtn = new JRadioButton("³²");
-		menBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		// ì„±ë³„ ë¼ë””ì˜¤ë°•ìŠ¤
+		JRadioButton menBtn = new JRadioButton("ë‚¨");
+		menBtn.setBackground(Color.WHITE);
+		menBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		menBtn.setBounds(118, 394, 57, 41);
-		JRadioButton womBtn = new JRadioButton("¿©");
-		womBtn.setFont(new Font("HYÇìµå¶óÀÎM", Font.PLAIN, 12));
+		JRadioButton womBtn = new JRadioButton("ì—¬");
+		womBtn.setBackground(Color.WHITE);
+		womBtn.setFont(new Font("HYí—¤ë“œë¼ì¸M", Font.PLAIN, 12));
 		womBtn.setBounds(203, 394, 57, 41);
 
-		// ¶óµğ¿À¹öÆ°±×·ì: È°µ¿Áö¼ö
+		// ë¼ë””ì˜¤ë²„íŠ¼ê·¸ë£¹: í™œë™ì§€ìˆ˜
 		ButtonGroup Use_Act_Index = new ButtonGroup();
 		Use_Act_Index.add(highBtn);
 		Use_Act_Index.add(midBtn);
 		Use_Act_Index.add(lowBtn);
 
-		// ¶óµğ¿À¹öÆ°±×·ì: ¼ºº°
+		// ë¼ë””ì˜¤ë²„íŠ¼ê·¸ë£¹: ì„±ë³„
 		ButtonGroup User_Gender = new ButtonGroup();
 
 		User_Gender.add(menBtn);
 		User_Gender.add(womBtn);
 
-		// ¶óµğ¿À¹öÆ°Ãß°¡
-		Join_panel.add(new JLabel("È°µ¿Áö¼ö"));
+		// ë¼ë””ì˜¤ë²„íŠ¼ì¶”ê°€
+		Join_panel.add(new JLabel("í™œë™ì§€ìˆ˜"));
 		Join_panel.add(highBtn);
 		Join_panel.add(midBtn);
 		Join_panel.add(lowBtn);
 
-		Join_panel.add(new JLabel("¼ºº°"));
+		Join_panel.add(new JLabel("ì„±ë³„"));
 		Join_panel.add(menBtn);
 		Join_panel.add(womBtn);
 
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 367, 64);
+		Join_panel.add(panel);
+		panel.setBackground(new Color(112, 139, 151)); // íŒ¨ë„ìƒ‰ìƒë°”ê¾¸ê¸°
+		
+		
+
 		setVisible(true);
 
-		/* ======================= ¾×¼Ç¸®½º³Ê ================================ */
+		/* ======================= ì•¡ì…˜ë¦¬ìŠ¤ë„ˆ ================================ */
 
-		// È¸¿ø°¡ÀÔ ¾×¼Ç
+		// íšŒì›ê°€ì… ì•¡ì…˜
 		joinCompleteBtn.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
 			@Override
@@ -236,26 +257,26 @@ public class Health_Join extends JFrame {
 				String User_Height = height.getText();
 				String User_Weight = weight.getText();
 
-				// È°µ¿Áö¼ö
+				// í™œë™ì§€ìˆ˜
 				String Use_Act_Index = null;
 				if (highBtn.isSelected()) {
-					Use_Act_Index = "60";
+					Use_Act_Index = "40";
 				}
 				if (midBtn.isSelected()) {
-					Use_Act_Index = "40";
+					Use_Act_Index = "35";
 				}
 				if (lowBtn.isSelected()) {
 					Use_Act_Index = "20";
 				}
 
-				// user_personal¿¡ ±ÇÀåÄ®·Î¸® ÀúÀå
+				// user_personalì— ê¶Œì¥ì¹¼ë¡œë¦¬ ì €ì¥
 				// float height = Float.parseFloat(User_Height);
 				// int active = Integer.getInteger(Use_Act_Index);
 				// Float result = (float) ((height - 100) * 0.9 * active);
 				// String Day_Recommend_Cal = Float.toString(result);
-				// System.out.println("±ÇÀåÄ®·Î¸®" +result);
+				// System.out.println("ê¶Œì¥ì¹¼ë¡œë¦¬" +result);
 
-				// ¼ºº°
+				// ì„±ë³„
 				String User_Gender = null;
 				if (menBtn.isSelected()) {
 					User_Gender = "M";
@@ -264,34 +285,42 @@ public class Health_Join extends JFrame {
 					User_Gender = "W";
 				}
 
-				// È¸¿ø°¡ÀÔ ½Ã ¿¹¿ÜÃ³¸®
+				// íšŒì›ê°€ì… ì‹œ ì˜ˆì™¸ì²˜ë¦¬
 				if (User_ID.trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ì•„ì´ë””ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
 				} else if (User_Password.trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
 				} else if (User_Name.trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "ÀÌ¸§À» ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ì´ë¦„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”");
 				} else if (User_Height.trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "Å°(cm)¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "í‚¤(cm)ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
 				} else if (User_Weight.trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "¸ö¹«°Ô(kg)¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ëª¸ë¬´ê²Œ(kg)ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
 				} else if (Use_Act_Index == null) {
-					JOptionPane.showMessageDialog(null, "È°µ¿Áö¼ö¸¦ ¼±ÅÃÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "í™œë™ì§€ìˆ˜ë¥¼ ì„ íƒí•´ì£¼ì„¸ìš”");
 				} else if (User_Gender == null) {
-					JOptionPane.showMessageDialog(null, "¼ºº°À» ¼±ÅÃÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ì„±ë³„ì„ ì„ íƒí•´ì£¼ì„¸ìš”");
 				} else if (idcheck) {
-					JOptionPane.showMessageDialog(null, "Áßº¹È®ÀÎÀ» ÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ì¤‘ë³µí™•ì¸ì„ í•´ì£¼ì„¸ìš”");
 				} else {
+					Float result;
 					float height = Float.parseFloat(User_Height);
 					float active = Float.parseFloat(Use_Act_Index);
-					Float result = (float) ((height - 100) * 0.9 * active);
+					if (User_Gender == "M") {
+						// í‘œì¤€ì²´ì¤‘(ë‚¨ì) = í‚¤(m)*í‚¤(m)*22, í‘œì¤€ì²´ì¤‘(ì—¬ì) = í‚¤(m)*í‚¤(m)*21
+						result = (float) ((height * height * 0.0001) * 22 * active);
+					} else {
+						// User_Gender == "W"
+						result = (float) ((height * height * 0.0001) * 21 * active);
+					}
+
 					String Day_Recommend_Cal = Float.toString(result);
-					System.out.println("±ÇÀåÄ®·Î¸®" + result);
+					System.out.println("ì„±ë³„: " + User_Gender + "ê¶Œì¥ì¹¼ë¡œë¦¬" + result);
 
 					healthcare.DBConnect.createJoin(User_ID, User_Password, User_Name, User_Gender, User_Height,
 							User_Weight, Use_Act_Index, Day_Recommend_Cal);
 
-					JOptionPane.showMessageDialog(null, "È¸¿ø°¡ÀÔÀÌ ¿Ï·áµÇ¾ú½À´Ï´Ù");
+					JOptionPane.showMessageDialog(null, "íšŒì›ê°€ì…ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤");
 
 					new Health_Login();
 					dispose();
@@ -300,7 +329,7 @@ public class Health_Join extends JFrame {
 			}
 		});
 
-		// Ãë¼Ò ¾×¼Ç
+		// ì·¨ì†Œ ì•¡ì…˜
 		undoBtn.addActionListener(new ActionListener() {
 
 			@Override
@@ -310,7 +339,7 @@ public class Health_Join extends JFrame {
 			}
 		});
 
-		// Áßº¹È®ÀÎ ¾×¼Ç
+		// ì¤‘ë³µí™•ì¸ ì•¡ì…˜
 		dcBtn.addActionListener(new ActionListener() {
 
 			@Override
@@ -318,7 +347,7 @@ public class Health_Join extends JFrame {
 				String User_ID = id.getText();
 
 				if (User_ID.trim().isEmpty()) {
-					JOptionPane.showMessageDialog(null, "¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä");
+					JOptionPane.showMessageDialog(null, "ì•„ì´ë””ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”");
 
 				} else {
 

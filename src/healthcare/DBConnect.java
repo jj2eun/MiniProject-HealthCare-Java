@@ -6,261 +6,315 @@ import javax.swing.JOptionPane;
 
 public class DBConnect {
 
-	public ResultSet getInfo(String query) {
-		Connection conn = null;
-		Statement stmt = null;
-		ResultSet rs = null;
+   public ResultSet getInfo(String query) {
+      Connection conn = null;
+      Statement stmt = null;
+      ResultSet rs = null;
 
-		String sql;
-		conn = getConnection();
+      String sql;
+      conn = getConnection();
 
-		// this.sql = "SELECT * FROM exercise limit 5";
-		sql = query;
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sql);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		return rs;
-	} // 정보 조회
+      // this.sql = "SELECT * FROM exercise limit 5";
+      sql = query;
+      try {
+         stmt = conn.createStatement();
+         rs = stmt.executeQuery(sql);
+      } catch (SQLException e1) {
+         e1.printStackTrace();
+      }
+      return rs;
+   } // 정보 조회
 
-	public void updateInfo(String query) {
-		Connection conn = null;
+   public void updateInfo(String query) {
+      Connection conn = null;
 
-		String sql;
-		conn = getConnection();
-		sql = query;
-		try {
-			conn.createStatement().executeQuery(sql);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-	} // Update Info
+      String sql;
+      conn = getConnection();
+      sql = query;
+      try {
+         conn.createStatement().executeQuery(sql);
+      } catch (SQLException e1) {
+         e1.printStackTrace();
+      }
+   } // Update Info
 
-	// =================== 로그인 DB Connect ==============================
-	public static int login(String User_ID, String User_Password) {
+   // =================== 로그인 DB Connect ==============================
+   public static int login(String User_ID, String User_Password) {
 
-		int success = 0;
+      int success = 0;
 
-		try {
+      try {
 
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement(
-					"select User_Password from user_personal WHERE User_ID = ? AND User_Password = ?");
-			stmt.setString(1, User_ID);
-			stmt.setString(2, User_Password);
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(
+               "select User_Password from user_personal WHERE User_ID = ? AND User_Password = ?");
+         stmt.setString(1, User_ID);
+         stmt.setString(2, User_Password);
 
-			ResultSet rs = stmt.executeQuery();
+         ResultSet rs = stmt.executeQuery();
 
-			while (rs.next()) {
-				success++;
-				System.out.println("login success");
-			}
+         while (rs.next()) {
+            success++;
+            System.out.println("login success");
+         }
 
-		} catch (Exception e) {
+      } catch (Exception e) {
 
-		}
-		return success;
+      }
+      return success;
 
-	} // 로그인 정보 저장
+   } // 로그인 정보 저장
 
-	public static void createJoin(String User_ID, String User_Password, String User_Name, String User_Gender,
-			String User_Height, String User_Weight, String Use_Act_Index, String Day_Recommend_Cal) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_personal"
-					+ "(User_ID, User_Password, User_Name,User_Gender,User_Height,User_Weight,Use_Act_Index,Day_Recommend_Cal)"
-					+ "VALUE" + "('" + User_ID + "','" + User_Password + "','" + User_Name + "','" + User_Gender + "','"
-					+ User_Height + "','" + User_Weight + "','" + Use_Act_Index + "','" + Day_Recommend_Cal + "')");
-			stmt.executeUpdate();
-			System.out.println("The data has been saved!");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	} // 회원가입 정보 저장
+   public static void createJoin(String User_ID, String User_Password, String User_Name, String User_Gender,
+         String User_Height, String User_Weight, String Use_Act_Index, String Day_Recommend_Cal) {
+      try {
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement("INSERT INTO user_personal"
+               + "(User_ID, User_Password, User_Name,User_Gender,User_Height,User_Weight,Use_Act_Index,Day_Recommend_Cal)"
+               + "VALUE" + "('" + User_ID + "','" + User_Password + "','" + User_Name + "','" + User_Gender + "','"
+               + User_Height + "','" + User_Weight + "','" + Use_Act_Index + "','" + Day_Recommend_Cal + "')");
+         stmt.executeUpdate();
+         System.out.println("The data has been saved!");
+      } catch (Exception e) {
+         System.out.println(e.getMessage());
+      }
+   } // 회원가입 정보 저장
 
-	public static boolean idCheck(String User_ID) {
+   public static boolean idCheck(String User_ID) {
 
-		try {
+      try {
 
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("select User_ID from user_personal WHERE User_ID = ?");
-			stmt.setString(1, User_ID);
-			ResultSet rs = stmt.executeQuery();
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement("select User_ID from user_personal WHERE User_ID = ?");
+         stmt.setString(1, User_ID);
+         ResultSet rs = stmt.executeQuery();
 
-			if (rs.next()) {
-				JOptionPane.showMessageDialog(null, "중복입니다.");
-				return true;
-			} else {
-				JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
-				return false;
-			}
+         if (rs.next()) {
+            JOptionPane.showMessageDialog(null, "중복입니다.");
+            return true;
+         } else {
+            JOptionPane.showMessageDialog(null, "사용가능한 ID 입니다.");
+            return false;
+         }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
+      } catch (SQLException e) {
+         e.printStackTrace();
+      }
+      return false;
 
-	} // ID 중복체크
+   } // ID 중복체크
 
-	public static Connection getConnection() {
+   public static Connection getConnection() {
 
-		try {
+      try {
 
-			String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
-			String DB_URL = "jdbc:mariadb://kitri.synology.me:3306/project1";
-			String USER = "kitri";
-			String PASS = "Kitri1950!@";
-			Class.forName(JDBC_DRIVER);
+         String JDBC_DRIVER = "org.mariadb.jdbc.Driver";
+         String DB_URL = "jdbc:mariadb://kitri.synology.me:3306/project1";
+         String USER = "kitri";
+         String PASS = "Kitri1950!@";
+         Class.forName(JDBC_DRIVER);
 
-			Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-			System.out.println("The Connection Successful");
-			return conn;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
-		}
+         System.out.println("The Connection Successful");
+         return conn;
+      } catch (Exception e) {
+         System.out.println(e.getMessage());
+         return null;
+      }
 
-	} // Get Connection
+   } // Get Connection
 
-	public static void closeConnection() {
+   public static void closeConnection() {
 
-	}// Close Connection
+   }// Close Connection
 
-	public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,
-			String food_cal, String choice_food_count) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement(
-					"INSERT INTO user_eat" + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_Cal,Food_Count)" + "VALUE"
-							+ "('" + user_id + "','" + choice_date + "','" + choice_time + "','" + choice_food + "','"
-							+ food_cal + "','" + choice_food_count + "')");
+   public static void user_eat(String user_id, String choice_date, String choice_time, String choice_food,
+         String food_cal, String choice_food_count) {
+      try {
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(
+               "INSERT INTO user_eat" + "(User_ID, Eat_Date, Eat_Time,Food_no,Food_Cal,Food_Count)" + "VALUE"
+                     + "('" + user_id + "','" + choice_date + "','" + choice_time + "','" + choice_food + "','"
+                     + food_cal + "','" + choice_food_count + "')");
 
-			stmt.executeUpdate();
+         stmt.executeUpdate();
 
-			System.out.println("The data has been saved! 1");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+         System.out.println("The data has been saved! 1");
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
 
-	}// 음식데이 저장 :아침
+   }// 음식데이 저장 :아침
 
-	public static void food_report(String user_id, String report_date, String day_Cal) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("INSERT INTO report"
-					+ "(User_ID, Report_Date,Day_C, Day_P, Day_F)"
-					+ " SELECT User_ID, Eat_Date, round(Food_C*Food_count,2) , round(Food_P*Food_count,2),round(Food_F*Food_count,2)"
-					+ " FROM report_result" + " WHERE User_ID = " + "'" + user_id + "'" + " AND Eat_Date = " + "'"
-					+ report_date + "'");
-			;
+   // 식단 Report 저장
+   public static void food_report(String user_id, String choice_date, String day_Cal
+         ) {
+      try {
+         //운동리스트가 미리 등록되어 있을 경우가 있으므로 if문 추가필요
+         Connection conn = getConnection();
 
-			PreparedStatement stmt2 = conn.prepareStatement("UPDATE report" + " SET Day_Cal = " + day_Cal
-					+ " WHERE User_ID = " + "'" + user_id + "'" + " AND Report_Date = " + "'" + report_date + "'");
+         PreparedStatement stmt = conn.prepareStatement("INSERT INTO report"
+               + " (User_ID, Report_Date,Day_C, Day_P, Day_F)" 
+               + " SELECT User_ID, Eat_Date, SUM(round(Food_C*Food_count,2)) , SUM(round(Food_P*Food_count,2)),SUM(round(Food_F*Food_count,2))"
+               + " FROM report_result"
 
-			System.out.println("오늘의칼로리" + stmt2);
+                     + " WHERE NOT EXISTS (SELECT * FROM report WHERE User_ID = " + "'"+user_id+"'"
+                     + " AND Report_Date = "+ "'"+choice_date+"')"
+                     + " AND User_ID = "+ "'"+user_id+"'"
+                     + " AND Eat_Date = " + "'" + choice_date+"'"
+                     + " GROUP BY" + " user_id" + "," + "Eat_Date ;"
+               );
 
-			stmt.executeUpdate();
-			stmt2.executeUpdate();
+         PreparedStatement stmt1 = conn.prepareStatement("UPDATE report"
+               + " SET"
+               + " Day_C = (SELECT SUM(round(Food_C * Food_count,2)) FROM report_result"
+               + " WHERE Report_Date =" + "'"+choice_date+"'"
+               + " AND User_ID =" + "'"+user_id+"'"
+               + " GROUP BY user_id, Eat_Date LIMIT 1 )"
 
-			System.out.println("The data has been saved! 2");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+                     + " , Day_P = (SELECT SUM(round(Food_P * Food_count,2)) FROM report_result"
+                     + " WHERE Report_Date =" + "'"+choice_date+"'"
+                     + " AND User_ID =" + "'"+user_id+"'"
+                     + " GROUP BY user_id, Eat_Date LIMIT 1 )"
 
-	public void user_exercise(String user_id, String choice_date, String choice_exercise, String exercise_cal,
-			String choice_exercise_time) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement(
-					"INSERT INTO user_exercise" + "(User_ID, Exercise_Date, Exercise_no,Exercise_Cal, Exercise_Time)"
-							+ "VALUE" + "('" + user_id + "','" + choice_date + "','" + choice_exercise + "','"
-							+ exercise_cal + "','" + choice_exercise_time + "')");
+                     + " , Day_F = (SELECT SUM(round(Food_F * Food_count,2)) FROM report_result"
+                     + " WHERE Report_Date =" + "'"+choice_date+"'"
+                     + " AND User_ID =" + "'"+user_id+"'"
+                     + " GROUP BY user_id, Eat_Date LIMIT 1 )"
 
-			stmt.executeUpdate();
+                     + " WHERE EXISTS (SELECT * FROM report WHERE User_ID =" +"'"+user_id+"'"
+                     + " AND Report_Date = " + "'"+choice_date+"');"
+               );
 
-			System.out.println("The data has been saved! 1");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+         PreparedStatement stmt2 = conn.prepareStatement("UPDATE report"
+               + " SET Day_Cal = " + day_Cal
+               + " WHERE User_ID = " + "'"+user_id+"'"
+               + " AND Report_Date = "+ "'"+choice_date+"'"
+               );
 
-	}// 음식데이 저장 :아침
+         System.out.println("오늘의칼로리" + stmt2);
 
-	public void exercise_report(String user_id, String report_date, String day_Cal) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("INSERT INTO report"
-					+ "(User_ID, Report_Date, Day_Use_Cal)"
-					+ " SELECT User_ID, Exercise_Date, round(Exercise_Cal*Exercise_Time)"
-					+ " FROM report_result2" + " WHERE User_ID = " + "'" + user_id + "'" + " AND Exercise_Date = " + "'" + report_date + "'");
-			;
+         stmt.executeUpdate();
+         stmt1.executeUpdate();
+         stmt2.executeUpdate();
 
-			PreparedStatement stmt2 = conn.prepareStatement("UPDATE report" + " SET Day_Use_Cal = " + day_Cal
-					+ " WHERE User_ID = " + "'" + user_id + "'" + " AND Report_Date = " + "'" + report_date + "'");
+         System.out.println("The data has been saved! 2");
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+   } //report 저장
 
-			System.out.println("오늘의칼로리" + stmt2);
+   // 운동 Report저장
+   public static void exer_report(String user_id, String report_date , String use_Cal) {
+         try { 
+             //운동리스트가 미리 등록되어 있을 경우가 있으므로 if문 추가필요
+            
+            Connection conn = getConnection();
+            
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO report"
+                        + " (User_ID,Report_Date,Day_Use_Cal)" 
+                        + " SELECT User_ID,Exercise_Date,SUM(round(Exercise_cal,2))"
+                        + " FROM user_exercise"
+                       
+                        + " WHERE NOT EXISTS (SELECT * FROM report WHERE User_ID = " + "'"+user_id+"'"
+                        + " AND Report_Date = "+ "'"+report_date+"')"
+                        + " AND User_ID = "+ "'"+user_id+"'"
+                        + " AND Exercise_Date = " + "'" + report_date+"'"
+                        + " GROUP BY  user_id , Exercise_Date ");
+                  
+                  
+                  PreparedStatement stmt2 = conn.prepareStatement("UPDATE report"
+                        + " SET Day_Use_Cal = "+"'"+use_Cal+"'"
+                       
+                        + " WHERE EXISTS (SELECT * FROM report WHERE User_ID = " + "'"+user_id+"'"
+                        + " AND Report_Date = "+ "'"+report_date+"')"
+                        + " AND User_ID = " + "'"+user_id+"'"
+                        + " AND Report_Date = " + "'" + report_date+"'"
+                       );
+                       
+                     stmt.executeQuery();
+                     stmt2.executeQuery();
+            
+         } catch (Exception eee) {
+            eee.printStackTrace();
+         }
+      }
+      
+   
+   
+   
 
-			stmt.executeUpdate();
-			stmt2.executeUpdate();
+   public void user_exercise(String user_id, String choice_date, String choice_exercise, String exercise_cal,
+         String choice_exercise_time) {
+      try {
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(
+               "INSERT INTO user_exercise" + "(User_ID, Exercise_Date, Exercise_no,Exercise_Cal, Exercise_Time)"
+                     + "VALUE" + "('" + user_id + "','" + choice_date + "','" + choice_exercise + "','"
+                     + exercise_cal + "','" + choice_exercise_time + "')");
 
-			System.out.println("The data has been saved! 2");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+         stmt.executeUpdate();
 
-	public static void delete(String choice_date, String user_id) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("DELETE FROM user_eat" + " WHERE Eat_Date =" + "'"
-					+ choice_date + "' " + "  AND User_ID =" + "'" + user_id + "'");
+         System.out.println("The data has been saved! 1");
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
 
-			stmt.executeUpdate();
-			System.out.println("The data has been deleted");
-		} catch (SQLException ee) {
-			System.out.println(ee.getMessage());
-		}
+   }// 음식데이 저장 :아침
 
-	}
+   public static void delete(String choice_date, String user_id) {
+      try {
+         Connection conn = getConnection();
+         PreparedStatement stmt =  conn.prepareStatement("DELETE FROM user_eat"
+               + " WHERE Eat_Date ="+"'"+choice_date+"' "
+               +"  AND User_ID ="+ "'"+ user_id+"'");
 
-	public void delete_exercise(String choice_date, String user_id) {
-		try {
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("DELETE FROM user_exercise" + " WHERE Exercise_Date =" + "'"
-					+ choice_date + "' " + "  AND User_ID =" + "'" + user_id + "'");
+         stmt.executeUpdate();
+         System.out.println("The data has been deleted");
+      } catch(SQLException ee) {
+         System.out.println(ee.getMessage());
+      }
 
-			stmt.executeUpdate();
-			System.out.println("The data has been deleted");
-		} catch (SQLException ee) {
-			System.out.println(ee.getMessage());
-		}
+   }
 
-	}
 
-	// ======================= 운동정보 조회 ================================
-	public static void exercise(String Exercise_Name, String Exercise_Cal) {
 
-		try {
+   public void delete_exercise(String choice_date, String user_id) {
+      try {
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement("DELETE FROM user_exercise" + " WHERE Exercise_Date =" + "'"
+               + choice_date + "' " + "  AND User_ID =" + "'" + user_id + "'");
 
-			Connection conn = getConnection();
-			PreparedStatement stmt = conn.prepareStatement("select * from exercise");
+         stmt.executeUpdate();
+         System.out.println("The data has been deleted");
+      } catch (SQLException ee) {
+         System.out.println(ee.getMessage());
+      }
 
-			ResultSet rs = stmt.executeQuery();
+   }
 
-			System.out.println(rs);
+   // ======================= 운동정보 조회 ================================
+   public static void exercise(String Exercise_Name, String Exercise_Cal) {
 
-			while (rs.next()) {
-				System.out.println(rs.getString("Exercise_Name") + (": ") + rs.getInt("Exercise_Cal") + ("kcal"));
+      try {
 
-			}
+         Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement("select * from exercise");
 
-		} catch (Exception e) {
+         ResultSet rs = stmt.executeQuery();
 
-		}
+         System.out.println(rs);
 
-	}
+         while (rs.next()) {
+            System.out.println(rs.getString("Exercise_Name") + (": ") + rs.getInt("Exercise_Cal") + ("kcal"));
+
+         }
+
+      } catch (Exception e) {
+
+      }
+
+   }
 
 }

@@ -3,6 +3,7 @@ package healthcare;
 import java.awt.Choice;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -13,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Calendar;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.Color;
 
 public class ExerciseList {
 	DBConnect db = new DBConnect();
@@ -41,7 +45,7 @@ public class ExerciseList {
 	DefaultTableModel model1;
 	DefaultTableModel model2;
 
-	String str1[] = { "운동코드", "운동", "소모칼로리" };
+	String str1[] = { "운동코드", "운동", "소모칼로리(1시간당)" };
 	String str2[] = { "운동코드", "운동", "소모칼로리", "운동시간" };
 
 	public static void main(String[] args) {
@@ -79,7 +83,8 @@ public class ExerciseList {
 		frame.setLocationRelativeTo(null);
 
 		JPanel contentPane = new JPanel();
-		contentPane.setBounds(0, 0, 794, 561);
+		contentPane.setBackground(Color.WHITE);
+		contentPane.setBounds(0, 0, 794, 571);
 		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
@@ -98,7 +103,7 @@ public class ExerciseList {
 		selectedDate = today_year + "-" + m + "-" + d;
 
 		Choice choiceDate = new Choice();
-		choiceDate.setBounds(135, 83, 264, 21);
+		choiceDate.setBounds(135, 60, 264, 21);
 		contentPane.add(choiceDate);
 
 		Calendar calender2 = Calendar.getInstance();
@@ -114,26 +119,38 @@ public class ExerciseList {
 		choiceDate.select(today_year + "-" + today_month + "-" + today_day);
 
 		// ====================================JButton====================================
-		JButton btnMain = new JButton("메인");
-		btnMain.setBounds(12, 10, 121, 67);
-		btnMain.setFont(new Font("굴림", Font.BOLD, 20));
-		contentPane.add(btnMain);
-
+		// 메인 버튼 이미지
+		ImageIcon ex_main = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_main.png");
+		Image ex_main1 = ex_main.getImage();
+		Image ex_main2 = ex_main1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_main3 = new ImageIcon(ex_main2);
+		// 메인버튼
+		JButton btnMain = new JButton(ex_main3);
 		btnMain.addActionListener(new ActionListener() {
-
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				Main m = new Main(user_id);
 				m.frame.setVisible(true);
 				frame.dispose();
-
+				
 			}
 		});
+		btnMain.setBounds(12, 10, 121, 40);
+		btnMain.setFont(new Font("굴림", Font.BOLD, 20));
+		contentPane.add(btnMain);
+		btnMain.setBorderPainted(false); //버튼테두리 없애
 
-		JButton btnFoodlist = new JButton("식단");
-		btnFoodlist.setBounds(145, 10, 121, 67);
+		// 식단 버튼 이미지
+		ImageIcon ex_food = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_food.png");
+		Image ex_food1 = ex_food.getImage();
+		Image ex_food2 = ex_food1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_food3 = new ImageIcon(ex_food2);
+		// 식단버튼
+		JButton btnFoodlist = new JButton(ex_food3);
+		btnFoodlist.setBounds(145, 10, 121, 40);
 		btnFoodlist.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnFoodlist);
+		btnFoodlist.setBorderPainted(false); //버튼테두리 없애
+
 
 		btnFoodlist.addActionListener(new ActionListener() {
 
@@ -145,11 +162,32 @@ public class ExerciseList {
 
 			}
 		});
+		
+		// 운동 버튼 이미지
+		ImageIcon ex_ex = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_ex.png");
+		Image ex_ex1 = ex_ex.getImage();
+		Image ex_ex2 = ex_ex1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_ex3 = new ImageIcon(ex_ex2);
+		// 운동버튼
+		JButton btnExer = new JButton(ex_ex3);
+		btnExer.setFont(new Font("굴림", Font.BOLD, 20));
+		btnExer.setBounds(278, 10, 121, 40);
+		contentPane.add(btnExer);
+		btnExer.setBorderPainted(false); //버튼테두리 없애
 
-		JButton btnRept = new JButton("리포트");
-		btnRept.setBounds(278, 10, 121, 67);
+
+		// 리포트 버튼 이미지
+		ImageIcon ex_report = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_report.png");
+		Image ex_report1 = ex_report.getImage();
+		Image ex_report2 = ex_report1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_report3 = new ImageIcon(ex_report2);
+		// 리포트 버튼
+		JButton btnRept = new JButton(ex_report3);
+		btnRept.setBounds(411, 10, 121, 40);
 		btnRept.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnRept);
+		btnRept.setBorderPainted(false); //버튼테두리 없애
+
 
 		btnRept.addActionListener(new ActionListener() {
 
@@ -161,24 +199,54 @@ public class ExerciseList {
 			}
 		});
 
-		JButton btnPlus = new JButton("+");
+		// 플러스 버튼 이미지
+		ImageIcon ex_plus = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_plus.png");
+		Image ex_plus1 = ex_plus.getImage();
+		Image ex_plus2 = ex_plus1.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_plus3 = new ImageIcon(ex_plus2);
+		// 플러스 버튼
+		JButton btnPlus = new JButton(ex_plus3);
 		btnPlus.setBounds(135, 511, 80, 40);
 		btnPlus.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnPlus);
+		btnPlus.setBorderPainted(false); //버튼테두리 없애
 
-		JButton btnMinus = new JButton("-");
+
+		// 마이너스 버튼 이미지
+		ImageIcon ex_minus = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_minus.png");
+		Image ex_minus1 = ex_minus.getImage();
+		Image ex_minus2 = ex_minus1.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_minus3 = new ImageIcon(ex_minus2);
+		// 마이너스
+		JButton btnMinus = new JButton(ex_minus3);
 		btnMinus.setBounds(227, 511, 80, 40);
 		btnMinus.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnMinus);
+		btnMinus.setBorderPainted(false); //버튼테두리 없애
 
-		JButton btnSave = new JButton("OK");
+
+		// ok 버튼 이미지
+		ImageIcon ex_ok = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\ex_ok.png");
+		Image ex_ok1 = ex_ok.getImage();
+		Image ex_ok2 = ex_ok1.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+		ImageIcon ex_ok3 = new ImageIcon(ex_ok2);
+		// ok버튼
+		JButton btnSave = new JButton(ex_ok3);
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnSave.setBounds(319, 511, 80, 40);
 		btnSave.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnSave);
+		btnSave.setBorderPainted(false); //버튼테두리 없애
+
+
+		//
 
 		// ====================================TextField====================================
 		JTextField fieldSearch = new JTextField();
-		fieldSearch.setBounds(432, 10, 320, 40);
+		fieldSearch.setBounds(135, 87, 264, 21);
 		contentPane.add(fieldSearch);
 		fieldSearch.setColumns(10);
 
@@ -192,20 +260,22 @@ public class ExerciseList {
 		contentPane.add(fieldTC);
 		fieldTC.setColumns(10);
 
-		model1 = new DefaultTableModel(ob1, str1){
+		model1 = new DefaultTableModel(ob1, str1) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
-		
-		model2 = new DefaultTableModel(ob2, str2){
+
+		model2 = new DefaultTableModel(ob2, str2) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
-		
+
 		try {
 			ResultSet rs = db.getInfo("SELECT * FROM exercise;");
 			while (rs.next()) {
@@ -231,21 +301,29 @@ public class ExerciseList {
 		table2.removeColumn(table2.getColumnModel().getColumn(0));
 
 		JScrollPane js1 = new JScrollPane(table1);
-		js1.setBounds(12, 136, 383, 365);
+		js1.setBounds(12, 118, 383, 383);
 		contentPane.add(js1);
+		js1.getViewport().setBackground(Color.WHITE);
 
 		JScrollPane js2 = new JScrollPane(table2);
-		js2.setBounds(432, 136, 317, 365);
+		js2.setBounds(432, 118, 340, 383);
 		contentPane.add(js2);
+		js2.getViewport().setBackground(Color.WHITE);
 		
-		fieldTC.setText(showUserExerciseList(today.toString())+"");
+		//테이블 폰트바꾸기
+		table1.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		table1.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		table2.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		table2.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+
+		fieldTC.setText(showUserExerciseList(today.toString()) + "");
 		// 날짜 클릭시 DB에 데이터 가져와서 테이블에 뿌리기
 		choiceDate.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				System.out.println(e.getItem());
-				selectedDate = (String) e.getItem(); // 선택한 날짜 얻기 
+				selectedDate = (String) e.getItem(); // 선택한 날짜 얻기
 				model2.setRowCount(0); // 오른쪽 테이블 초기화
-				fieldTC.setText(showUserExerciseList(selectedDate)+""); // 오른쪽테이블 출력 + 총칼로리 출력
+				fieldTC.setText(showUserExerciseList(selectedDate) + ""); // 오른쪽테이블 출력 + 총칼로리 출력
 			}
 		});
 
@@ -276,8 +354,10 @@ public class ExerciseList {
 				else if (fieldCount.getText().trim().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "수량을 입력해주세요");
 				} else {
-					Object sdb[] = { tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 0), tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 1),
-							tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
+					Object sdb[] = { tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 0),
+							tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 1),
+							tableRowSorter2.getModel().getValueAt(table1.convertRowIndexToModel(row), 2),
+							fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 얻기, 수량
 					// ->
 					// sdb[]에 담기
 
@@ -328,7 +408,7 @@ public class ExerciseList {
 					}
 				}
 
-				db.exercise_report(user_id, choice_date, fieldTC.getText());
+				db.exer_report(user_id, choice_date, fieldTC.getText());
 
 				JOptionPane.showMessageDialog(null, "운동데이터를 저장했습니다");
 
@@ -336,29 +416,43 @@ public class ExerciseList {
 		});
 		// ====================================JLabel====================================
 
+		JLabel lblChoiceDate_1 = new JLabel("검색");
+		lblChoiceDate_1.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		lblChoiceDate_1.setForeground(Color.DARK_GRAY);
+		lblChoiceDate_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblChoiceDate_1.setBounds(12, 87, 121, 21);
+		contentPane.add(lblChoiceDate_1);
+		
 		JLabel lblTC = new JLabel("총 칼로리");
-		lblTC.setBounds(412, 511, 139, 40);
+		lblTC.setForeground(Color.DARK_GRAY);
+		lblTC.setBounds(411, 511, 132, 33);
 		lblTC.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTC.setFont(new Font("굴림", Font.BOLD, 20));
+		lblTC.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblTC);
 
 		JLabel lblTime = new JLabel("시간");
+		lblTime.setForeground(Color.DARK_GRAY);
 		lblTime.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTime.setFont(new Font("굴림", Font.BOLD, 16));
-		lblTime.setBounds(12, 511, 46, 40);
+		lblTime.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
+		lblTime.setBounds(0, 511, 70, 40);
 		contentPane.add(lblTime);
 
 		JLabel lblChoiceDate = new JLabel("날짜 선택");
+		lblChoiceDate.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		lblChoiceDate.setForeground(Color.DARK_GRAY);
 		lblChoiceDate.setHorizontalAlignment(SwingConstants.CENTER);
-		lblChoiceDate.setBounds(12, 83, 121, 21);
+		lblChoiceDate.setBounds(12, 60, 121, 21);
 		contentPane.add(lblChoiceDate);
 
 		JLabel lblMyexer = new JLabel("선택한 운동");
-		lblMyexer.setFont(new Font("굴림", Font.BOLD, 25));
+		lblMyexer.setForeground(Color.DARK_GRAY);
+		lblMyexer.setBackground(Color.WHITE);
+		lblMyexer.setFont(new Font("HY헤드라인M", Font.PLAIN, 18));
 		lblMyexer.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMyexer.setBounds(411, 60, 348, 44);
+		lblMyexer.setBounds(432, 60, 340, 58);
 		contentPane.add(lblMyexer);
 	}
+
 	public float showUserExerciseList(String date) {
 		totalCal = 0;
 
@@ -367,8 +461,7 @@ public class ExerciseList {
 			ResultSet rs_exercise = db.getInfo(
 					"SELECT Ex_no, User_ID, Exercise_Date, u.Exercise_no, Exercise_Name, e.Exercise_Cal, Exercise_Time "
 							+ "FROM user_exercise u LEFT OUTER JOIN exercise e " + "USING(Exercise_no) "
-							+ "WHERE (User_ID = '" + user_id + "') AND (Exercise_Date ='" + selectedDate
-							+ "');");
+							+ "WHERE (User_ID = '" + user_id + "') AND (Exercise_Date ='" + selectedDate + "');");
 
 			while (rs_exercise.next()) {
 				String Exercise_no = rs_exercise.getString("Exercise_no");
@@ -385,8 +478,8 @@ public class ExerciseList {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		return totalCal;
-		
+
 	}
 }

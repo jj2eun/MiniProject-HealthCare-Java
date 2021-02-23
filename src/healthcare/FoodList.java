@@ -3,6 +3,7 @@ package healthcare;
 import java.awt.Choice;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -13,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Calendar;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +30,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.Color;
 
 public class FoodList {
 	DBConnect db = new DBConnect();
@@ -45,7 +49,7 @@ public class FoodList {
 	DefaultTableModel lunchmodel;
 	DefaultTableModel dinnermodel;
 	DefaultTableModel dessertmodel;
-	String str[] = { "번호", "음식", "칼로리" };
+	String str[] = { "번호", "음식", "칼로리(1회 제공량)" };
 	String str2[] = { "번호", "음식", "칼로리", "수량" };
 
 	/**
@@ -88,6 +92,7 @@ public class FoodList {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		JPanel contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBounds(0, 0, 794, 561);
 		frame.getContentPane().add(contentPane);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -107,7 +112,7 @@ public class FoodList {
 		selectedDate = today_year + "-" + m + "-" + d;
 
 		Choice choiceDate = new Choice();
-		choiceDate.setBounds(135, 83, 211, 20);
+		choiceDate.setBounds(133, 60, 264, 21);
 		contentPane.add(choiceDate);
 
 		for (int i = 2021; i < 2023; i++) {
@@ -121,7 +126,7 @@ public class FoodList {
 		choiceDate.select(today_year + "-" + today_month + "-" + today_day);
 
 		Choice choiceTime = new Choice();
-		choiceTime.setBounds(135, 110, 211, 20);
+		choiceTime.setBounds(133, 87, 264, 21);
 		contentPane.add(choiceTime);
 
 		choiceTime.add("아침");
@@ -129,10 +134,17 @@ public class FoodList {
 		choiceTime.add("저녁");
 		choiceTime.add("간식");
 		// ==============================JButton==============================
-		JButton btnMain = new JButton("메인");
-		btnMain.setBounds(12, 10, 121, 67);
+		// 메인 버튼 이미지
+		ImageIcon food_main = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_main.png");
+		Image food_main1 = food_main.getImage();
+		Image food_main2 = food_main1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_main3 = new ImageIcon(food_main2);
+		// 메인버튼
+		JButton btnMain = new JButton(food_main3);
+		btnMain.setBounds(12, 10, 121, 40);
 		btnMain.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnMain);
+		btnMain.setBorderPainted(false); // 버튼테두리 없애
 
 		btnMain.addActionListener(new ActionListener() {
 
@@ -144,11 +156,28 @@ public class FoodList {
 
 			}
 		});
+		// 식단 버튼 이미지
+		ImageIcon food_food = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_food.png");
+		Image food_food1 = food_food.getImage();
+		Image food_food2 = food_food1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_food3 = new ImageIcon(food_food2);
+		// 식단버튼
+		JButton btnFoodlist = new JButton(food_food3);
+		btnFoodlist.setFont(new Font("굴림", Font.BOLD, 20));
+		btnFoodlist.setBounds(144, 10, 121, 40);
+		contentPane.add(btnFoodlist);
+		btnFoodlist.setBorderPainted(false); // 버튼테두리 없애
 
-		JButton btnExer = new JButton("운동");
-		btnExer.setBounds(145, 10, 121, 67);
+		// 운동 버튼 이미지
+		ImageIcon food_ex = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_ex.png");
+		Image food_ex1 = food_ex.getImage();
+		Image food_ex2 = food_ex1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_ex3 = new ImageIcon(food_ex2);
+		JButton btnExer = new JButton(food_ex3);
+		btnExer.setBounds(277, 10, 121, 40);
 		btnExer.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnExer);
+		btnExer.setBorderPainted(false); // 버튼테두리 없애
 
 		btnExer.addActionListener(new ActionListener() {
 
@@ -161,10 +190,17 @@ public class FoodList {
 			}
 		});
 
-		JButton btnRept = new JButton("리포트");
-		btnRept.setBounds(278, 10, 121, 67);
+		// 리포트 버튼 이미지
+		ImageIcon food_report = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_report.png");
+		Image food_report1 = food_report.getImage();
+		Image food_report2 = food_report1.getScaledInstance(121, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_report3 = new ImageIcon(food_report2);
+		// 리포트 버튼
+		JButton btnRept = new JButton(food_report3);
+		btnRept.setBounds(410, 10, 121, 40);
 		btnRept.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnRept);
+		btnRept.setBorderPainted(false); // 버튼테두리 없애
 
 		btnRept.addActionListener(new ActionListener() {
 
@@ -176,24 +212,45 @@ public class FoodList {
 			}
 		});
 
-		JButton btnPlus = new JButton("+");
+		// 플러스 버튼 이미지
+		ImageIcon food_plus = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_plus.png");
+		Image food_plus1 = food_plus.getImage();
+		Image food_plus2 = food_plus1.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_plus3 = new ImageIcon(food_plus2);
+		// 플러스버튼
+		JButton btnPlus = new JButton(food_plus3);
 		btnPlus.setBounds(135, 511, 80, 40);
 		btnPlus.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnPlus);
+		btnPlus.setBorderPainted(false); // 버튼테두리 없애
 
-		JButton btnMinus = new JButton("-");
+		// 마이너스 버튼 이미지
+		ImageIcon food_minus = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_minus.png");
+		Image food_minus1 = food_minus.getImage();
+		Image food_minus2 = food_minus1.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_minus3 = new ImageIcon(food_minus2);
+		// 마이너스 버튼
+		JButton btnMinus = new JButton(food_minus3);
 		btnMinus.setBounds(227, 511, 80, 40);
 		btnMinus.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnMinus);
+		btnMinus.setBorderPainted(false); // 버튼테두리 없애
 
-		JButton btnSave = new JButton("OK");
+		// ok 버튼 이미지
+		ImageIcon food_ok = new ImageIcon("C:\\Users\\kitri\\Desktop\\미니프로젝트\\icon\\food_ok.png");
+		Image food_ok1 = food_ok.getImage();
+		Image food_ok2 = food_ok1.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+		ImageIcon food_ok3 = new ImageIcon(food_ok2);
+		// ok버튼
+		JButton btnSave = new JButton(food_ok3);
 		btnSave.setBounds(319, 511, 80, 40);
 		btnSave.setFont(new Font("굴림", Font.BOLD, 20));
 		contentPane.add(btnSave);
+		btnSave.setBorderPainted(false); // 버튼테두리 없애
 
 		// ==============================JTextField==============================
 		JTextField fieldSearch = new JTextField();
-		fieldSearch.setBounds(463, 10, 231, 40);
+		fieldSearch.setBounds(133, 120, 264, 21);
 		contentPane.add(fieldSearch);
 		fieldSearch.setColumns(10);
 
@@ -227,39 +284,44 @@ public class FoodList {
 			System.out.println("select() 실행 오류 : " + e.getMessage());
 		}
 
-		JTable table = new JTable(model){
+		JTable table = new JTable(model) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
 
-		JTable morningTable = new JTable(morningmodel){
+		JTable morningTable = new JTable(morningmodel) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
 
-		JTable lunchTable = new JTable(lunchmodel){
+		JTable lunchTable = new JTable(lunchmodel) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
 
-		JTable dinnerTable = new JTable(dinnermodel){
+		JTable dinnerTable = new JTable(dinnermodel) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
 
-		JTable dessertTable = new JTable(dessertmodel){
+		JTable dessertTable = new JTable(dessertmodel) {
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int i, int c){ 
-				return false; 
-			} 
+
+			public boolean isCellEditable(int i, int c) {
+				return false;
+			}
 		};
 		tableRowSorter2 = new TableRowSorter<>(table.getModel()); // 시작할때, 기존 음식테이블 저장
 
@@ -280,30 +342,48 @@ public class FoodList {
 		dessertTable.removeColumn(dessertTable.getColumnModel().getColumn(0));
 
 		JScrollPane js = new JScrollPane(table);
-		js.setBounds(12, 136, 383, 365);
+		js.setBounds(12, 151, 383, 350);
 		contentPane.add(js);
+		js.getViewport().setBackground(Color.WHITE);
+		
 
 		JScrollPane morningjs = new JScrollPane(morningTable);
-		morningjs.setBounds(463, 83, 317, 95);
+		morningjs.setBounds(456, 83, 316, 95);
 		contentPane.add(morningjs);
+		morningjs.getViewport().setBackground(Color.WHITE);
 
 		JScrollPane lunchjs = new JScrollPane(lunchTable);
-		lunchjs.setBounds(463, 188, 317, 95);
+		lunchjs.setBounds(456, 188, 316, 95);
 		contentPane.add(lunchjs);
+		lunchjs.getViewport().setBackground(Color.WHITE);
 
 		JScrollPane dinnerjs = new JScrollPane(dinnerTable);
-		dinnerjs.setBounds(463, 293, 317, 95);
+		dinnerjs.setBounds(456, 293, 316, 95);
 		contentPane.add(dinnerjs);
+		dinnerjs.getViewport().setBackground(Color.WHITE);
 
 		JScrollPane dessertjs = new JScrollPane(dessertTable);
-		dessertjs.setBounds(463, 398, 317, 95);
+		dessertjs.setBounds(456, 398, 316, 95);
 		contentPane.add(dessertjs);
+		dessertjs.getViewport().setBackground(Color.WHITE);
+
+		//테이블 폰트바꾸기
+		table.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		table.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		morningTable.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		morningTable.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		lunchTable.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		lunchTable.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		dinnerTable.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		dinnerTable.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		dessertTable.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		dessertTable.getTableHeader().setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
 
 		// 디폴트로 오늘 데이터, 총칼로리 출력
-		fieldTC.setText(showUserFoodlist(today.toString())+"");
+		fieldTC.setText(showUserFoodlist(today.toString()) + "");
 		// 날짜 클릭시 DB에 데이터 가져와서 아점저간 테이블에 뿌리기
 		choiceDate.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {				
+			public void itemStateChanged(ItemEvent e) {
 				selectedDate = (String) e.getItem(); // 바뀐 날짜
 				// 오른쪽 테이블 초기화
 				morningmodel.setRowCount(0);
@@ -311,7 +391,7 @@ public class FoodList {
 				dinnermodel.setRowCount(0);
 				dessertmodel.setRowCount(0);
 				// UserFoodlist 출력
-				fieldTC.setText(showUserFoodlist(selectedDate)+"");
+				fieldTC.setText(showUserFoodlist(selectedDate) + "");
 			}
 		});
 
@@ -331,8 +411,10 @@ public class FoodList {
 				else if (fieldCount.getText().trim().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "수량을 입력해주세요");
 				} else {
-					Object sdb[] = { tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 0), tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 1),
-							tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 2), fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 , 수량
+					Object sdb[] = { tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 0),
+							tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 1),
+							tableRowSorter2.getModel().getValueAt(table.convertRowIndexToModel(row), 2),
+							fieldCount.getText() }; // 음식리스트.음식명, 음식리스트.칼로리 , 수량
 
 					if (choiceTime.getItem(choiceTime.getSelectedIndex()) == "아침") {
 						sdb[2] = Float.valueOf(sdb[2].toString()) * Float.valueOf(sdb[3].toString());
@@ -459,50 +541,67 @@ public class FoodList {
 
 		// ==============================Label==============================
 		JLabel lblTC = new JLabel("총 칼로리");
-		lblTC.setBounds(412, 511, 139, 40);
+		lblTC.setForeground(Color.DARK_GRAY);
+		lblTC.setBounds(412, 511, 139, 33);
 		lblTC.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTC.setFont(new Font("굴림", Font.BOLD, 20));
+		lblTC.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblTC);
 
 		JLabel lblMorning = new JLabel("아침");
-		lblMorning.setBounds(405, 83, 57, 95);
+		lblMorning.setForeground(Color.DARK_GRAY);
+		lblMorning.setBounds(405, 83, 51, 95);
 		lblMorning.setHorizontalAlignment(SwingConstants.CENTER);
-		lblMorning.setFont(new Font("굴림", Font.BOLD, 20));
+		lblMorning.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblMorning);
 
 		JLabel lblLunch = new JLabel("점심");
-		lblLunch.setBounds(405, 188, 57, 95);
+		lblLunch.setForeground(Color.DARK_GRAY);
+		lblLunch.setBounds(405, 188, 51, 95);
 		lblLunch.setHorizontalAlignment(SwingConstants.CENTER);
-		lblLunch.setFont(new Font("굴림", Font.BOLD, 20));
+		lblLunch.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblLunch);
 
 		JLabel lblDinner = new JLabel("저녁");
-		lblDinner.setBounds(402, 293, 57, 95);
+		lblDinner.setForeground(Color.DARK_GRAY);
+		lblDinner.setBounds(405, 293, 51, 95);
 		lblDinner.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDinner.setFont(new Font("굴림", Font.BOLD, 20));
+		lblDinner.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblDinner);
 
 		JLabel lblDessert = new JLabel("간식");
-		lblDessert.setBounds(402, 398, 57, 95);
+		lblDessert.setForeground(Color.DARK_GRAY);
+		lblDessert.setBounds(405, 398, 51, 95);
 		lblDessert.setHorizontalAlignment(SwingConstants.CENTER);
-		lblDessert.setFont(new Font("굴림", Font.BOLD, 20));
+		lblDessert.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblDessert);
 
 		JLabel lblCount = new JLabel("수량");
-		lblCount.setBounds(12, 511, 46, 40);
+		lblCount.setForeground(Color.DARK_GRAY);
+		lblCount.setBounds(12, 511, 58, 40);
 		lblCount.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCount.setFont(new Font("굴림", Font.BOLD, 16));
+		lblCount.setFont(new Font("HY헤드라인M", Font.PLAIN, 16));
 		contentPane.add(lblCount);
 
 		JLabel lblChoiceDate = new JLabel("날짜 선택");
-		lblChoiceDate.setBounds(12, 83, 121, 21);
+		lblChoiceDate.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		lblChoiceDate.setForeground(Color.DARK_GRAY);
+		lblChoiceDate.setBounds(12, 60, 121, 21);
 		lblChoiceDate.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblChoiceDate);
 
 		JLabel lblChoiceTime = new JLabel("시간 선택");
-		lblChoiceTime.setBounds(12, 110, 121, 21);
+		lblChoiceTime.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		lblChoiceTime.setForeground(Color.DARK_GRAY);
+		lblChoiceTime.setBounds(12, 87, 121, 21);
 		lblChoiceTime.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblChoiceTime);
+
+		JLabel lblChoiceTime_1 = new JLabel("검색");
+		lblChoiceTime_1.setFont(new Font("HY헤드라인M", Font.PLAIN, 12));
+		lblChoiceTime_1.setForeground(Color.DARK_GRAY);
+		lblChoiceTime_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblChoiceTime_1.setBounds(12, 120, 121, 21);
+		contentPane.add(lblChoiceTime_1);
 
 	}
 
@@ -532,7 +631,7 @@ public class FoodList {
 				totalCal += Float.parseFloat(Food_cal);
 				Float Food_Count = rs_morning.getFloat("Food_Count");
 				Object data_morning[] = { Food_no, Food_Name, Food_cal, Food_Count };
-				System.out.println(Food_no +Food_Name );
+				System.out.println(Food_no + Food_Name);
 				morningmodel.addRow(data_morning);
 
 			}
